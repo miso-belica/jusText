@@ -1,6 +1,6 @@
 #summary Description of the jusText boilerplate cleaning algorithm.
 
-= Introduction =
+== Introduction ==
 
 The algorithm uses a simple way of segmentation. The contents of some HTML tags
 are (by default) visually formatted as blocks by Web browsers. The idea is to
@@ -29,8 +29,75 @@ The key idea of the algorithm is that long blocks and some short blocks can be
 classified with very high confidence. All the other short blocks can then be
 classified by looking at the surrounding blocks.
 
-= Preprocessing =
+== Preprocessing ==
 
-= Context-free classification =
+In the preprocessing stage, the contents of `<header>`, `<style>` and `<script>` tags are
+removed. The contents of `<select>` tags are immediately labeled as bad (boilerplate). 
+The same applies to blocks containing a copyright symbol (¬©).
 
-= Context-sensitive classification =
+== Context-free classification ==
+
+After the segmentation and preprocessing, context-free classification is
+executed which assigns each block to one of four classes:
+
+ * _bad_ -- boilerplate blocks
+ * _good_ -- main content blocks
+ * _short_ -- too short to make a reliable decision about the class
+ * _near-good_ -- somewhere in-between short and good
+
+The classification is done by the following algorithm:
+{{{
+if link_density > MAX_LINK_DENSITY:
+    return 'bad'
+
+# short blocks
+if word_count < LENGTH_LOW:
+    if link_density > 0:
+        return 'bad'
+    else:
+        return 'short'
+
+# medium and long blocks
+if stopwords_density > STOPWORDS_HIGH:
+    if word_count > LENGTH_HIGH:
+        return 'good'
+    else:
+        return 'near-good'
+if stopwords_density > STOPWORDS_LOW:
+    return 'near-good'
+else:
+    return 'bad'
+}}}
+
+
+The word count is the number of space-separated items and the link density is defined
+as the proportion of
+tokens inside `<a>` tags. The stop words
+density is simply the proportion of stop list words.
+
+The algorithm takes two integers `LENGHT_LOW` and `LENGTH_HIGH` and three floating
+point numbers `MAX_LINK_DENSITY`, `STOPWORDS_LOW` and `STOPWORDS_HIGH` as
+parameters. The former two set the thresholds for dividing the blocks by tokens
+count into short, medium-size and long. The latter two divide the blocks by the
+stop words density into low, medium and high. The default settings are:
+
+ * MAX_LINK_DENSITY = 0.2
+ * LENGTH_LOW = 10
+ * LENGTH_HIGH = 30
+ * STOPWORDS_LOW = 0.30 
+ * STOPWORDS_HIGH = 0.32
+
+These values give good results with respect to creating textual resources for corpora.
+They have been determined by performing a number of experiments.
+
+The assignment of classes for the medium and long blocks is summarised in the following table:
+
+|| *block size (word count)* || *stopwords density* || *class* ||
+|| medium-size || low || bad ||
+|| long  || low || bad ||
+|| medium-size || medium || near-good ||
+|| long ||  medium ||  near-good ||
+|| medium-size || high || near-good ||
+|| long  || high || good ||
+
+== Context-sensitive classification ==
