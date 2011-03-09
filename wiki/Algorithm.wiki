@@ -119,7 +119,7 @@ classified as _bad_. All the others are classified as _good_. If all the blocks 
 the sequence are _short_ (there is no _near-good_ block) they are all classified as
 _bad_. This is illustrated on the following example:
 
-FIXME! Add image.
+[http://nlp.fi.muni.cz/~xpomikal/justext-img/cs_classification_example.png]
 
 The idea behind the context-sensitive classification is that boilerplate blocks
 are typically surrounded by other boilerplate blocks and vice versa. The
