@@ -1,0 +1,3 @@
+include README
+include COPYING
+recursive-include justext *.txt
