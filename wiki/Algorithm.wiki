@@ -1,0 +1,36 @@
+#summary Description of the jusText boilerplate cleaning algorithm.
+
+= Introduction =
+
+The algorithm uses a simple way of segmentation. The contents of some HTML tags
+are (by default) visually formatted as blocks by Web browsers. The idea is to
+form textual blocks by splitting the HTML page on these tags.
+The full list of the used block-level tags includes: BLOCKQUOTE, CAPTION,
+CENTER, COL, COLGROUP, DD, DIV, DL, DT, FIELDSET, FORM, H1, H2, H3, H4, H5, H6,
+LEGEND, LI, OPTGROUP, OPTION, P, PRE, TABLE, TD, TEXTAREA, TFOOT, TH, THEAD, TR,
+UL. A sequence of two or more BR tags also separates blocks. 
+
+Though some of such blocks contain a mixture of good and boilerplate content, this is fairly rare. Most blocks are homogeneous in this respect.
+
+Several observations can be made about such blocks:
+
+ # Short blocks which contain a link are almost always boilerplate.
+ # Any blocks which contain many links are almost always boilerplate.
+ # Long blocks which contain grammatical text are almost always good whereas all other long block are almost always boilerplate.
+ # Both good (main content) and boilerplate blocks tend to create clusters, i.e. a boilerplate block is usually surrounded by other boilerplate blocks and vice versa.
+
+Deciding whether a text is grammatical or not may be tricky, but a simple
+heuristic can be used based on the volume of function words (stop words). While
+a grammatical text will typically contain a certain proportion of function words,
+few function words will be present in boilerplate content such as lists and
+enumerations.
+
+The key idea of the algorithm is that long blocks and some short blocks can be
+classified with very high confidence. All the other short blocks can then be
+classified by looking at the surrounding blocks.
+
+= Preprocessing =
+
+= Context-free classification =
+
+= Context-sensitive classification =
