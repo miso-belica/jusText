@@ -101,3 +101,38 @@ The assignment of classes for the medium and long blocks is summarised in the fo
 || long  || high || good ||
 
 == Context-sensitive classification ==
+
+The goal of the context-sensitive part of the algorithm is to re-classify the
+_short_ and _near-good_ blocks either as _good_ or _bad_ based on the classes of the
+surrounding blocks. The blocks already classified as _good_ or _bad_ serve as base
+stones in this stage. Their classification is considered reliable and is never
+changed.
+
+The pre-classified blocks can be viewed as sequences of _short_ and _near-good_
+blocks delimited with _good_ and _bad_ blocks. Each such sequence can be surrounded
+by two _good_ blocks, two _bad_ blocks or by a _good_ block at one side and a _bad_
+block at the other. The former two cases are handled easily. All blocks in the
+sequence are classified as _good_ or _bad_ respectively. In the latter case, a
+_near-good_  block closest to the _bad_ block serves as a delimiter of the _good_ and
+_bad_ area. All blocks between the _bad_ block and the _near-good_ block are
+classified as _bad_. All the others are classified as _good_. If all the blocks in
+the sequence are _short_ (there is no _near-good_ block) they are all classified as
+_bad_. This is illustrated on the following example:
+
+FIXME! Add image.
+
+The idea behind the context-sensitive classification is that boilerplate blocks
+are typically surrounded by other boilerplate blocks and vice versa. The
+_near-good_ blocks usually contain useful corpus data if they occur close to _good_
+blocks. The _short_ blocks are typically only useful if they are surrounded by
+_good_ blocks from both sides. They may, for instance, be a part of a dialogue
+where each utterance is formatted as a single block. While discarding them may
+not constitute a loss of significant amount of data, losing the context for the
+remaining nearby blocks could be a problem.
+
+In the description of the context-sensitive classification, one special case has
+been intentionally omitted in order to keep it reasonably simple. A sequence of
+_short_ and _near-good_ blocks may as well occur at the beginning or at the end of
+the document. This case is handled as if the edges of the documents were _bad_
+blocks as the main content is typically located in the middle of the document
+and the boilerplate near the borders.
