@@ -81,11 +81,11 @@ parameters. The former two set the thresholds for dividing the blocks by tokens
 count into short, medium-size and long. The latter two divide the blocks by the
 stop words density into low, medium and high. The default settings are:
 
- * MAX_LINK_DENSITY = 0.2
- * LENGTH_LOW = 10
- * LENGTH_HIGH = 30
- * STOPWORDS_LOW = 0.30 
- * STOPWORDS_HIGH = 0.32
+ * `MAX_LINK_DENSITY` = 0.2
+ * `LENGTH_LOW` = 10
+ * `LENGTH_HIGH` = 30
+ * `STOPWORDS_LOW` = 0.30 
+ * `STOPWORDS_HIGH` = 0.32
 
 These values give good results with respect to creating textual resources for corpora.
 They have been determined by performing a number of experiments.
