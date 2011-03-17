@@ -33,7 +33,7 @@ classified by looking at the surrounding blocks.
 
 In the preprocessing stage, the contents of `<header>`, `<style>` and `<script>` tags are
 removed. The contents of `<select>` tags are immediately labeled as bad (boilerplate). 
-The same applies to blocks containing a copyright symbol (¬©).
+The same applies to blocks containing a copyright symbol (©).
 
 == Context-free classification ==
 
