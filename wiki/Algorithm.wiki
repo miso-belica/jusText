@@ -136,3 +136,6 @@ _short_ and _near-good_ blocks may as well occur at the beginning or at the end 
 the document. This case is handled as if the edges of the documents were _bad_
 blocks as the main content is typically located in the middle of the document
 and the boilerplate near the borders.
+
+== Headings ==
+under construction
