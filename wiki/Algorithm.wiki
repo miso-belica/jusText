@@ -10,7 +10,7 @@ CENTER, COL, COLGROUP, DD, DIV, DL, DT, FIELDSET, FORM, H1, H2, H3, H4, H5, H6,
 LEGEND, LI, OPTGROUP, OPTION, P, PRE, TABLE, TD, TEXTAREA, TFOOT, TH, THEAD, TR,
 UL. A sequence of two or more BR tags also separates blocks. 
 
-Though some of such blocks contain a mixture of good and boilerplate content, this is fairly rare. Most blocks are homogeneous in this respect.
+Though some of such blocks may contain a mixture of good and boilerplate content, this is fairly rare. Most blocks are homogeneous in this respect.
 
 Several observations can be made about such blocks:
 
