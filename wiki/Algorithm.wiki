@@ -138,4 +138,35 @@ blocks as the main content is typically located in the middle of the document
 and the boilerplate near the borders.
 
 == Headings ==
-under construction
+Header blocks (those enclosed in `<h1>`, `<h2>`, `<h3>`, etc tags) are treated
+in a special way by jusText unless the `NO_HEADINGS` option is used. The aim is to
+preserve headings for the _good_ texts.
+
+The algorithm adds two stages of processing for the header blocks. The first stage
+(preprocessing) is executed after context-free classification and before
+context-sensitive classification. The second stage (postprocessing) is 
+performed after the context-sensitive classification:
+
+ # context-free classification
+ # preprocessing of header blocks
+ # context-sensitive classification
+ # postprocessing of header blocks 
+
+The preprocessing looks for _short_ header blocks which precede _good_ blocks
+and at the same time there is no more than `MAX_HEADING_DISTANCE` words
+between the header block and the _good_ block. The context-free class of such
+header blocks is changed from _short_ to _near-good_. The purpose of this is to
+preserve _short_ blocks between the heading and the _good_ text which might
+otherwise be removed (classified as _bad_) by the context-sensitive classification.
+
+The postprocessing again looks for header blocks which precede _good_ blocks
+and are no further than `MAX_HEADING_DISTANCE` away. This time, the matched
+headers are classified as _good_ if their context-free class was other than _bad_.
+In other words, the _bad_ headings remain _bad_, but some _short_ and
+_near-good_ headings can be classified as _good_ if they precede _good_ blocks,
+even though they would normally be classified as _bad_ by the context-sensitive
+classification (e.g. they are surrounded by _bad_ blocks). This stage preserves
+the "non-bad" headings of _good_ blocks.
+
+Note that the postprocessing is not iterative, i.e. the header blocks re-classified as
+_good_ do not affect the classification of any other preceding header blocks.
