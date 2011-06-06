@@ -88,6 +88,42 @@ def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
             raise JustextError('Unable to convert the HTML to unicode from %s: %s' % (
                 default_encoding, e))
 
+decode_entities_pp_trans = {
+    ord(u'\x83'): u'\u0192',
+    ord(u'\x84'): u'\u201e',
+    ord(u'\x85'): u'\u2026',
+    ord(u'\x86'): u'\u2020',
+    ord(u'\x87'): u'\u2021',
+    ord(u'\x88'): u'\u02c6',
+    ord(u'\x89'): u'\u2030',
+    ord(u'\x8a'): u'\u0160',
+    ord(u'\x8b'): u'\u2039',
+    ord(u'\x8c'): u'\u0152',
+    ord(u'\x91'): u'\u2018',
+    ord(u'\x92'): u'\u2019',
+    ord(u'\x93'): u'\u201c',
+    ord(u'\x94'): u'\u201d',
+    ord(u'\x95'): u'\u2022',
+    ord(u'\x96'): u'\u2013',
+    ord(u'\x97'): u'\u2014',
+    ord(u'\x98'): u'\u02dc',
+    ord(u'\x99'): u'\u2122',
+    ord(u'\x9a'): u'\u0161',
+    ord(u'\x9b'): u'\u203a',
+    ord(u'\x9c'): u'\u0153',
+    ord(u'\x9f'): u'\u0178',
+}
+def decode_entities_pp(unicode_string):
+    """
+    Post-processing of HTML entity decoding. The entities &#128; to &#159;
+    (&#x80; to &#x9f;) are not defined in HTML 4, but they are still used on
+    the web and recognised by web browsers. This method converts some of the
+    u'\x80' to u'\x9f' characters (which are likely to be incorrectly decoded
+    entities; mostly control characters) to the characters which the entities
+    are normally decoded to.
+    """
+    return unicode_string.translate(decode_entities_pp_trans)
+
 def add_kw_tags(root):
     """
     Surrounds text nodes with <kw></kw> tags. To protect text nodes from
