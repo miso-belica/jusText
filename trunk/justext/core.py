@@ -17,14 +17,14 @@ import lxml.html
 import lxml.sax
 
 MAX_LINK_DENSITY_DEFAULT = 0.2
-LENGTH_LOW_DEFAULT = 10
-LENGTH_HIGH_DEFAULT = 30
+LENGTH_LOW_DEFAULT = 70
+LENGTH_HIGH_DEFAULT = 200
 STOPWORDS_LOW_DEFAULT = 0.30
 STOPWORDS_HIGH_DEFAULT = 0.32
 NO_HEADINGS_DEFAULT = False
-# Short and near-good headings within MAX_HEADING_DISTANCE words before
+# Short and near-good headings within MAX_HEADING_DISTANCE characters before
 # a good paragraph are classified as good unless --no-headings is specified.
-MAX_HEADING_DISTANCE_DEFAULT = 30
+MAX_HEADING_DISTANCE_DEFAULT = 200
 PARAGRAPH_TAGS = ['blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
         'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
         'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
@@ -211,7 +211,7 @@ class SaxPragraphMaker(ContentHandler):
             'dom_path': '.'.join(self.dom),
             'text_nodes': [],
             'word_count': 0,
-            'linked_word_count': 0,
+            'linked_char_count': 0,
             'tag_count': 0,
         }
 
@@ -248,11 +248,12 @@ class SaxPragraphMaker(ContentHandler):
     def characters(self, content):
         if content.strip() == '':
             return
-        self.paragraph['text_nodes'].append(re.sub("\s+", " ", content.strip()))
-        words = content.strip().split()
+        text = re.sub("\s+", " ", content)
+        self.paragraph['text_nodes'].append(text.strip())
+        words = text.strip().split()
         self.paragraph['word_count'] += len(words)
         if self.link:
-            self.paragraph['linked_word_count'] += len(words)
+            self.paragraph['linked_char_count'] += len(text)
         self.br = False
 
 def make_paragraphs(root):
@@ -267,6 +268,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         no_headings=NO_HEADINGS_DEFAULT):
     "Context-free pragraph classification."
     for paragraph in paragraphs:
+        length = len(paragraph['text'])
         stopword_count = 0
         for word in paragraph['text'].split():
             if word in stoplist:
@@ -277,7 +279,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
             link_density = 0
         else:
             stopword_density = 1.0 * stopword_count / word_count
-            link_density = float(paragraph['linked_word_count']) / word_count
+            link_density = float(paragraph['linked_char_count']) / length
         paragraph['stopword_count'] = stopword_count
         paragraph['stopword_density'] = stopword_density
         paragraph['link_density'] = link_density
@@ -290,14 +292,14 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         elif re.search('(^select|\.select)', paragraph['dom_path']):
             paragraph['cfclass'] = 'bad'
         else:
-            if paragraph['word_count'] < length_low:
-                if paragraph['linked_word_count'] > 0:
+            if length < length_low:
+                if paragraph['linked_char_count'] > 0:
                     paragraph['cfclass'] = 'bad'
                 else:
                     paragraph['cfclass'] = 'short'
             else:
                 if stopword_density >= stopwords_high:
-                    if paragraph['word_count'] > length_high:
+                    if length > length_high:
                         paragraph['cfclass'] = 'good'
                     else:
                         paragraph['cfclass'] = 'neargood'
@@ -351,7 +353,7 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
             if paragraphs[j]['class'] == 'good':
                 paragraph['class'] = 'neargood'
                 break
-            distance += paragraphs[j]['word_count']
+            distance += len(paragraphs[j]['text'])
             j += 1
 
     # classify short
@@ -397,7 +399,7 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
             if paragraphs[j]['class'] == 'good':
                 paragraph['class'] = 'good'
                 break
-            distance += paragraphs[j]['word_count']
+            distance += len(paragraphs[j]['text'])
             j += 1
 
 def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
@@ -426,11 +428,11 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     word_count:
       Number of words.
     
-    linked_word_count:
-      Number of words inside links.
+    linked_char_count:
+      Number of characters inside links.
 
     link_density:
-      linked_word_count / word_count
+      linked_char_count / len(text)
             
     stopword_count:
       Number of stoplist words.
