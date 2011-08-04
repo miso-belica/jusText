@@ -62,11 +62,11 @@ def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
     """
     if encoding:
         return unicode(html_string, encoding, errors=errors)
-    re_meta1 = re.compile('''<meta\s+http-equiv=['"]content-type['"]\s+content=['"][^'"]*charset=([^'"]+)''', re.I)
-    re_meta2 = re.compile('''<meta\s+content=['"][^'"]*charset=([^'"]+)['"]\s+http-equiv=['"]content-type['"]''', re.I)
-    re_meta3 = re.compile('''<meta\s+http-equiv=['"]charset['"]\s+content=['"]([^'"]+)''', re.I)
-    re_meta4 = re.compile('''<meta\s+content=['"]([^'"]+)['"]\s+http-equiv=['"]charset['"]''', re.I)
-    re_meta5 = re.compile('''<meta\s+charset=['"]([^'"]+)''', re.I)
+    re_meta1 = re.compile('''<meta\s+http-equiv=['"]?content-type['"]?\s+content=['"]?[^'"]*charset=([^'"]+)''', re.I)
+    re_meta2 = re.compile('''<meta\s+content=['"]?[^'"]*charset=([^'"]+)['"]?\s+http-equiv=['"]?content-type['"]?''', re.I)
+    re_meta3 = re.compile('''<meta\s+http-equiv=['"]?charset['"]?\s+content=['"]?([^'"]+)''', re.I)
+    re_meta4 = re.compile('''<meta\s+content=['"]?([^'"]+)['"]?\s+http-equiv=['"]?charset['"]?''', re.I)
+    re_meta5 = re.compile('''<meta\s+charset=['"]?([^'"]+)''', re.I)
     for re_meta in (re_meta1, re_meta2, re_meta3, re_meta4, re_meta5):
         m = re_meta.search(html_string)
         if m:
