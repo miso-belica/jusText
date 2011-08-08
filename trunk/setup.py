@@ -10,7 +10,7 @@ from distutils.core import setup
 
 setup(
     name='justext',
-    version='1.1',
+    version='1.2',
     description='Heuristic based boilerplate removal tool',
     long_description='''jusText is a tool for removing boilerplate content,
     such as navigation links, headers, and footers from HTML pages. It is
