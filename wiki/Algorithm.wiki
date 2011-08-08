@@ -51,7 +51,7 @@ if link_density > MAX_LINK_DENSITY:
     return 'bad'
 
 # short blocks
-if word_count < LENGTH_LOW:
+if length < LENGTH_LOW:
     if link_density > 0:
         return 'bad'
     else:
@@ -59,7 +59,7 @@ if word_count < LENGTH_LOW:
 
 # medium and long blocks
 if stopwords_density > STOPWORDS_HIGH:
-    if word_count > LENGTH_HIGH:
+    if length > LENGTH_HIGH:
         return 'good'
     else:
         return 'near-good'
@@ -70,20 +70,17 @@ else:
 }}}
 
 
-The word count is the number of space-separated items and the link density is defined
-as the proportion of
-tokens inside `<a>` tags. The stop words
-density is simply the proportion of stop list words.
+The length is the number of characters in the block. The link density is defined as the proportion of characters inside `<a>` tags. The stop words density is the proportion of stop list words (the text is tokenized into "words" by splitting at spaces).
 
 The algorithm takes two integers `LENGHT_LOW` and `LENGTH_HIGH` and three floating
 point numbers `MAX_LINK_DENSITY`, `STOPWORDS_LOW` and `STOPWORDS_HIGH` as
-parameters. The former two set the thresholds for dividing the blocks by tokens
-count into short, medium-size and long. The latter two divide the blocks by the
+parameters. The former two set the thresholds for dividing the blocks by length into short,
+medium-size and long. The latter two divide the blocks by the
 stop words density into low, medium and high. The default settings are:
 
  * `MAX_LINK_DENSITY` = 0.2
- * `LENGTH_LOW` = 10
- * `LENGTH_HIGH` = 30
+ * `LENGTH_LOW` = 70
+ * `LENGTH_HIGH` = 200
  * `STOPWORDS_LOW` = 0.30 
  * `STOPWORDS_HIGH` = 0.32
 
@@ -153,7 +150,7 @@ performed after the context-sensitive classification:
  # postprocessing of header blocks 
 
 The preprocessing looks for _short_ header blocks which precede _good_ blocks
-and at the same time there is no more than `MAX_HEADING_DISTANCE` words
+and at the same time there is no more than `MAX_HEADING_DISTANCE` characters
 between the header block and the _good_ block. The context-free class of such
 header blocks is changed from _short_ to _near-good_. The purpose of this is to
 preserve _short_ blocks between the heading and the _good_ text which might
