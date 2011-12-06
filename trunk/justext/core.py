@@ -205,7 +205,8 @@ class SaxPragraphMaker(ContentHandler):
 
     def _start_new_pragraph(self):
         if self.paragraph and self.paragraph['text_nodes'] != []:
-            self.paragraph['text'] = ' '.join(self.paragraph['text_nodes'])
+            self.paragraph['text'] = re.sub("\s+", " ", (
+                ''.join(self.paragraph['text_nodes']))).strip()
             self.paragraphs.append(self.paragraph)
         self.paragraph = {
             'dom_path': '.'.join(self.dom),
@@ -249,7 +250,7 @@ class SaxPragraphMaker(ContentHandler):
         if content.strip() == '':
             return
         text = re.sub("\s+", " ", content)
-        self.paragraph['text_nodes'].append(text.strip())
+        self.paragraph['text_nodes'].append(text)
         words = text.strip().split()
         self.paragraph['word_count'] += len(words)
         if self.link:
@@ -506,7 +507,7 @@ def output_krdwrd(paragraphs, fp=sys.stdout):
         else:
             cls = 1
         for text_node in paragraph['text_nodes']:
-            print >> fp, '%i\t%s' % (cls, text_node)
+            print >> fp, '%i\t%s' % (cls, text_node.strip())
 
 def usage():
     return """Usage: %(progname)s -s STOPLIST [OPTIONS] [HTML_FILE]
