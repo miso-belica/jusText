@@ -133,6 +133,13 @@ def add_kw_tags(root):
     nodes_with_text = []
     nodes_with_tail = []
     for node in root.iter():
+        # temporary workaround for issue #2 caused by a bug #690110 in lxml
+        try:
+            node.text
+        except UnicodeDecodeError:
+            # remove any text that can't be decoded
+            node.text = ''
+
         if node.text and node.tag not in (lxml.etree.Comment, lxml.etree.ProcessingInstruction):
             nodes_with_text.append(node)
         if node.tail:
