@@ -176,9 +176,16 @@ def remove_comments(root):
 def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
         enc_errors=DEFAULT_ENC_ERRORS):
     "Converts HTML to DOM and removes unwanted parts."
-    uhtml_text = decode_html(html_text, encoding, default_encoding, enc_errors)
+    if isinstance(html_text, unicode):
+        decoded_html = html_text
+        # encode HTML for case it's XML with encoding declaration
+        encoding_type = encoding if encoding else default_encoding
+        html_text = html_text.encode(encoding_type, enc_errors)
+    else:
+        decoded_html = decode_html(html_text, encoding, default_encoding, enc_errors)
+
     try:
-        root = lxml.html.fromstring(uhtml_text)
+        root = lxml.html.fromstring(decoded_html)
     except ValueError: # Unicode strings with encoding declaration are not supported.
         # for XHTML files with encoding declaration, use the declared encoding
         root = lxml.html.fromstring(html_text)
