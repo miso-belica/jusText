@@ -419,35 +419,35 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as a dictionary with the following attributes:
-    
+
     text:
       Plain text content.
-    
+
     cfclass:
       The context-free class -- class assigned by the context-free
       classification: 'good', 'bad', 'neargood' or 'short'.
-    
+
     class:
       The final class: 'good' or 'bad'.
-    
+
     heading:
       Set to True of the paragraph contains a heading, False otherwise.
-    
+
     word_count:
       Number of words.
-    
+
     linked_char_count:
       Number of characters inside links.
 
     link_density:
       linked_char_count / len(text)
-            
+
     stopword_count:
       Number of stoplist words.
-      
+
     stopword_density:
       stopword_count / word_count
-    
+
     dom_path:
       A dom path to the paragraph in the originial HTML page.
     """
@@ -542,7 +542,7 @@ Convert HTML to plain text and remove boilerplate.
                      krdwrd: KrdWrd compatible format
   --no-headings    disable special handling of headings
   --list-stoplists print a list of inbuilt stoplists and exit
-  -V, --version    print version information and exit 
+  -V, --version    print version information and exit
   -h, --help       display this help and exit
 
 If no HTML_FILE specified, input is read from stdin.
