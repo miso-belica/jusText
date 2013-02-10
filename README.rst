@@ -13,8 +13,10 @@ linguistic resources such as Web corpora. You can
 This is the a fork of original code of jusText_ hosted on Google code.
 Below are some "forks" that I found on GitHub:
 
-- https://github.com/chbrown/justext
+- https://github.com/andreypopp/extracty/tree/master/justext
+- https://github.com/dreamindustries/jaws/tree/master/justext
 - https://github.com/says/justext
+- https://github.com/chbrown/justext
 - https://github.com/says/justext-app
 
 Installation
