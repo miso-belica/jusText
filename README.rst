@@ -50,7 +50,8 @@ Usage
 -----
 .. code-block:: bash
 
-  $ python -m justext -s english_page.html > plain_text.txt
+  $ python -m justext -s Czech --url=http://www.zdrojak.cz/clanky/automaticke-zabezpeceni/ > text.txt
+  $ python -m justext -s English english_page.html > plain_text.txt
   $ python -m justext --help # for more info
 
 Python API
