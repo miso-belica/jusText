@@ -35,7 +35,6 @@ setup(
     install_requires=["lxml>=2.2.4"],
     packages=["justext"],
     package_data={"justext": ["stoplists/*.txt"]},
-    scripts=["bin/justext"],
     classifiers=(
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
