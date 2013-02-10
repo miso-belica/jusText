@@ -1,28 +1,47 @@
-#!/usr/bin/env python
-#
-# Copyright (c) 2011 Jan Pomikalek
-# All rights reserved.
-#
-# This software is licensed as described in the file COPYING, which
-# you should have received as part of this distribution.
+# -*- coding: utf8 -*-
 
-from distutils.core import setup
+"""
+Copyright (c) 2011 Jan Pomikalek
+
+This software is licensed as described in the file LICENSE.rst.
+"""
+
+from __future__ import with_statement
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+import justext
+
+
+with open("README.rst") as readme, open("CHANGELOG.rst") as changelog:
+    long_description = readme.read() + "\n\n" + changelog.read()
+
+with open("LICENSE.rst") as file:
+    license = file.read()
+
 
 setup(
-    name='justext',
-    version='1.2',
-    description='Heuristic based boilerplate removal tool',
-    long_description='''jusText is a tool for removing boilerplate content,
-    such as navigation links, headers, and footers from HTML pages. It is
-    designed to preserve mainly text containing full sentences and it is
-    therefore well suited for creating linguistic resources such as Web
-    corpora.''',
-    author='Jan Pomikalek',
-    author_email='jan.pomikalek@gmail.com',
-    url='http://code.google.com/p/justext/',
-    license='BSD',
-    requires=['lxml (>=2.2.4)'],
-    packages=['justext'],
-    package_data={'justext': ['stoplists/*.txt']},
-    scripts=['bin/justext'],
+    name="jusText",
+    version=justext.__version__,
+    description="Heuristic based boilerplate removal tool",
+    long_description=long_description,
+    author="Michal Belica",
+    author_email="miso.belica@gmail.com",
+    url="https://github.com/miso-belica/jusText",
+    license=license,
+    install_requires=["lxml>=2.2.4"],
+    packages=["justext"],
+    package_data={"justext": ["stoplists/*.txt"]},
+    scripts=["bin/justext"],
+    classifiers=(
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "License :: OSI Approved :: BSD License",
+        "Programming Language :: Python",
+        "Topic :: Text Processing :: Filters",
+    ),
 )

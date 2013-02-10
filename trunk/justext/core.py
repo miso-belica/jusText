@@ -1,8 +1,10 @@
-# Copyright (c) 2011 Jan Pomikalek
-# All rights reserved.
-#
-# This software is licensed as described in the file COPYING, which
-# you should have received as part of this distribution.
+# -*- coding: utf8 -*-
+
+"""
+Copyright (c) 2011 Jan Pomikalek
+
+This software is licensed as described in the file LICENSE.rst.
+"""
 
 import codecs
 import os
