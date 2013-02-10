@@ -133,12 +133,20 @@ def decode_entities_pp(unicode_string):
     """
     return unicode_string.translate(decode_entities_pp_trans)
 
+
+def is_blank(string):
+    """
+    Returns `True` if string contains only white-space characters
+    or is empty. Otherwise `False` is returned.
+    """
+    return not bool(string.lstrip())
+
+
 def add_kw_tags(root):
     """
     Surrounds text nodes with <kw></kw> tags. To protect text nodes from
     being removed with nearby tags.
     """
-    blank_text = re.compile(u'^\s*$', re.U)
     nodes_with_text = []
     nodes_with_tail = []
     for node in root.iter():
@@ -154,7 +162,7 @@ def add_kw_tags(root):
         if node.tail:
             nodes_with_tail.append(node)
     for node in nodes_with_text:
-        if blank_text.match(node.text):
+        if is_blank(node.text):
             node.text = None
         else:
             kw = lxml.etree.Element('kw')
@@ -162,7 +170,7 @@ def add_kw_tags(root):
             node.text = None
             node.insert(0, kw)
     for node in nodes_with_tail:
-        if blank_text.match(node.tail):
+        if is_blank(node.tail):
             node.tail = None
         else:
             kw = lxml.etree.Element('kw')
