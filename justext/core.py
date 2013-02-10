@@ -274,10 +274,7 @@ class SaxPragraphMaker(ContentHandler):
                 self.paragraph['tag_count'] -= 1
             self._start_new_pragraph()
         else:
-            if name == 'br':
-                self.br = True
-            else:
-                self.br = False
+            self.br = bool(name == "br")
             if name == 'a':
                 self.link = True
             self.paragraph['tag_count'] += 1
@@ -294,8 +291,9 @@ class SaxPragraphMaker(ContentHandler):
         self._start_new_pragraph()
 
     def characters(self, content):
-        if content.strip() == '':
+        if is_blank(content):
             return
+
         text = normalize_whitespace(content)
         self.paragraph['text_nodes'].append(text)
 
