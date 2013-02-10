@@ -2,6 +2,7 @@
 
 Changelog for jusText
 =====================
+- *FEATURE:* Option "--url" added to CLI.
 - *FEATURE:* It is possible to pass unicode string directly.
 
 1.2 (2011-08-08)

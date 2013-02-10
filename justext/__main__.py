@@ -69,7 +69,7 @@ def main():
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "o:s:hV", ["encoding=",
-            "enc-force", "enc-errors=", "format=",
+            "enc-force", "enc-errors=", "format=", "url=",
             "no-headings", "help", "version", "length-low=", "length-high=",
             "stopwords-low=", "stopwords-high=", "max-link-density=",
             "max-heading-distance=", "list-stoplists"])
@@ -79,6 +79,7 @@ def main():
         sys.exit(1)
 
     stream_writer = codecs.lookup('utf-8')[-1]
+    fp_in = sys.stdin
     fp_out = stream_writer(sys.stdout)
     stoplist = None
     format = 'default'
@@ -140,6 +141,10 @@ def main():
                         else:
                             # probably incorrectly specified path
                             raise JustextInvalidOptions("File not found: %s" % a)
+            elif o == "--url":
+                import urllib2
+                fp_in = urllib2.urlopen(a)
+                del urllib2
             elif o == "--encoding":
                 try:
                     default_encoding = a
@@ -208,9 +213,7 @@ def main():
             stopwords_high = 0
             stopwords_low = 0
 
-        if args == []:
-            fp_in = sys.stdin
-        else:
+        if args:
             try:
                 fp_in = open(args[0], 'r')
             except IOError, e:
@@ -219,6 +222,9 @@ def main():
                 sys.exit(1)
 
         html_text = fp_in.read()
+        if fp_in is not sys.stdin:
+            fp_in.close()
+
         paragraphs = justext(html_text, stoplist, length_low, length_high,
             stopwords_low, stopwords_high, max_link_density, max_heading_distance,
             no_headings, encoding, default_encoding, enc_errors)
