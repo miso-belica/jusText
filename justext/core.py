@@ -226,6 +226,12 @@ def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
     return root
 
 
+MULTIPLE_WHITESPACE_PATTERN = re.compile(r"\s+", re.UNICODE)
+def normalize_whitespace(string):
+    """Translates multiple white-space into single space."""
+    return MULTIPLE_WHITESPACE_PATTERN.sub(" ", string)
+
+
 class SaxPragraphMaker(ContentHandler):
     """
     A class for converting a HTML page represented as a DOM object into a list
@@ -242,9 +248,10 @@ class SaxPragraphMaker(ContentHandler):
 
     def _start_new_pragraph(self):
         if self.paragraph and self.paragraph['text_nodes'] != []:
-            self.paragraph['text'] = re.sub("\s+", " ", (
-                ''.join(self.paragraph['text_nodes']))).strip()
+            text = ''.join(self.paragraph['text_nodes'])
+            self.paragraph['text'] = normalize_whitespace(text.strip())
             self.paragraphs.append(self.paragraph)
+
         self.paragraph = {
             'dom_path': '.'.join(self.dom),
             'text_nodes': [],
@@ -286,7 +293,7 @@ class SaxPragraphMaker(ContentHandler):
     def characters(self, content):
         if content.strip() == '':
             return
-        text = re.sub("\s+", " ", content)
+        text = normalize_whitespace(content)
         self.paragraph['text_nodes'].append(text)
         words = text.strip().split()
         self.paragraph['word_count'] += len(words)
