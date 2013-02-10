@@ -9,6 +9,7 @@ This software is licensed as described in the file LICENSE.rst.
 import os
 import re
 import sys
+import cgi
 import codecs
 import pkgutil
 import lxml.etree
@@ -476,8 +477,8 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     return paragraphs
 
 def html_escape(text):
-    "Converts < and > to &lt; and &gt;."
-    return text.replace('<', '&lt;').replace('>', '&gt;')
+    """Converts special HTML characters to corresponding entities."""
+    return cgi.escape(text)
 
 def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
     """
