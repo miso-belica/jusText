@@ -67,7 +67,7 @@ def get_stoplist(language):
 def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
         errors=DEFAULT_ENC_ERRORS):
     """
-    Converts a `html_string` containing an HTML page into unicode.
+    Converts a `html_string` containing an HTML page into Unicode.
     Tries to guess character encoding from meta tag.
     """
     if isinstance(html_string, unicode):
@@ -94,7 +94,7 @@ def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
         try:
             return html_string.decode(default_encoding)
         except UnicodeDecodeError as e:
-            raise JustextError("Unable to decode the HTML to unicode: " + str(e))
+            raise JustextError("Unable to decode the HTML to Unicode: " + str(e))
 
 
 decode_entities_pp_trans = {
