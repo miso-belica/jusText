@@ -65,11 +65,6 @@ Advanced options:
 }
 
 
-def html_escape(text):
-    """Converts special HTML characters to corresponding entities."""
-    return cgi.escape(text)
-
-
 def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
     """
     Outputs the paragraphs as:
@@ -90,7 +85,7 @@ def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
                 continue
             else:
                 tag = 'b'
-        print >> fp, '<%s> %s' % (tag, html_escape(paragraph['text'].strip()))
+        print >> fp, '<%s> %s' % (tag, cgi.escape(paragraph['text'].strip()))
 
 
 def output_detailed(paragraphs, fp=sys.stdout):
@@ -101,7 +96,7 @@ def output_detailed(paragraphs, fp=sys.stdout):
     for paragraph in paragraphs:
         print >> fp, '<p class="%s" cfclass="%s" heading="%i"> %s' % (
             paragraph['class'], paragraph['cfclass'],
-            int(paragraph['heading']), html_escape(paragraph['text'].strip()))
+            int(paragraph['heading']), cgi.escape(paragraph['text'].strip()))
 
 
 def output_krdwrd(paragraphs, fp=sys.stdout):
