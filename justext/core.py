@@ -173,15 +173,18 @@ def add_kw_tags(root):
             parent.insert(parent.index(node) + 1, kw)
     return root
 
+
 def remove_comments(root):
     "Removes comment nodes."
-    to_be_removed = []
+    comments = []
     for node in root.iter():
-        if node.tag == lxml.etree.Comment:
-            to_be_removed.append(node)
-    for node in to_be_removed:
-        parent = node.getparent()
-        del parent[parent.index(node)]
+        if isinstance(node, lxml.html.HtmlComment):
+            comments.append(node)
+
+    # start with inner most nodes
+    for comment in reversed(comments):
+        comment.drop_tree()
+
 
 def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
         enc_errors=DEFAULT_ENC_ERRORS):

@@ -62,6 +62,15 @@ Python API
     if paragraph['class'] == 'good':
       print paragraph['text']
 
+Testing
+-------
+Run tests via
+
+.. code-block:: bash
+
+  $ cd tests
+  $ python -tt -Wall -B -3 -m unittest discover
+
 Acknowledgements
 ----------------
 .. _`Natural Language Processing Centre`: http://nlp.fi.muni.cz/en/nlpc
