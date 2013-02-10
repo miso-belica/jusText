@@ -470,13 +470,13 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
       linked_char_count / len(text)
 
     stopword_count:
-      Number of stoplist words.
+      Number of stop-words in stop-list.
 
     stopword_density:
       stopword_count / word_count
 
     dom_path:
-      A dom path to the paragraph in the originial HTML page.
+      A dom path to the paragraph in the original HTML page.
     """
     root = preprocess(html_text, encoding=encoding,
         default_encoding=default_encoding, enc_errors=enc_errors)
