@@ -2,6 +2,8 @@
 
 from __future__ import absolute_import
 
+import cgi
+
 from .core import *
 
 
@@ -61,6 +63,67 @@ Advanced options:
     'default_encoding': DEFAULT_ENCODING,
     'default_enc_errors': DEFAULT_ENC_ERRORS,
 }
+
+
+def html_escape(text):
+    """Converts special HTML characters to corresponding entities."""
+    return cgi.escape(text)
+
+
+def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
+    """
+    Outputs the paragraphs as:
+    <tag> text of the first paragraph
+    <tag> text of the second paragraph
+    ...
+    where <tag> is <p>, <h> or <b> which indicates
+    standard paragraph, heading or boilerplate respecitvely.
+    """
+    for paragraph in paragraphs:
+        if paragraph['class'] == 'good':
+            if paragraph['heading']:
+                tag = 'h'
+            else:
+                tag = 'p'
+        else:
+            if no_boilerplate:
+                continue
+            else:
+                tag = 'b'
+        print >> fp, '<%s> %s' % (tag, html_escape(paragraph['text'].strip()))
+
+
+def output_detailed(paragraphs, fp=sys.stdout):
+    """
+    Same as output_default, but only <p> tags are used and the following
+    attributes are added: class, cfclass and heading.
+    """
+    for paragraph in paragraphs:
+        print >> fp, '<p class="%s" cfclass="%s" heading="%i"> %s' % (
+            paragraph['class'], paragraph['cfclass'],
+            int(paragraph['heading']), html_escape(paragraph['text'].strip()))
+
+
+def output_krdwrd(paragraphs, fp=sys.stdout):
+    """
+    Outputs the paragraphs in a KrdWrd compatible format:
+    class<TAB>first text node
+    class<TAB>second text node
+    ...
+    where class is 1, 2 or 3 which means
+    boilerplate, undecided or good respectively. Headings are output as
+    undecided.
+    """
+    for paragraph in paragraphs:
+        if paragraph['class'] in ('good', 'neargood'):
+            if paragraph['heading']:
+                cls = 2
+            else:
+                cls = 3
+        else:
+            cls = 1
+        for text_node in paragraph['text_nodes']:
+            print >> fp, '%i\t%s' % (cls, text_node.strip())
 
 
 def main():
