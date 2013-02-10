@@ -249,7 +249,10 @@ class SaxPragraphMaker(ContentHandler):
     def _start_new_pragraph(self):
         if self.paragraph and self.paragraph['text_nodes'] != []:
             text = ''.join(self.paragraph['text_nodes'])
-            self.paragraph['text'] = normalize_whitespace(text.strip())
+            text = normalize_whitespace(text.strip())
+            self.paragraph['text'] = text
+            self.paragraph['word_count'] = len(text.split())
+
             self.paragraphs.append(self.paragraph)
 
         self.paragraph = {
@@ -295,8 +298,7 @@ class SaxPragraphMaker(ContentHandler):
             return
         text = normalize_whitespace(content)
         self.paragraph['text_nodes'].append(text)
-        words = text.strip().split()
-        self.paragraph['word_count'] += len(words)
+
         if self.link:
             self.paragraph['linked_char_count'] += len(text)
         self.br = False
