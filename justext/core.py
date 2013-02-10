@@ -193,6 +193,13 @@ def remove_comments(root):
         comment.drop_tree()
 
 
+def remove_tags(root, *tags):
+    useless_tags = tuple(n for n in root.iter() if n.tag in tags)
+    # start with inner most nodes
+    for node in reversed(useless_tags):
+        node.drop_tree()
+
+
 def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
         enc_errors=DEFAULT_ENC_ERRORS):
     "Converts HTML to DOM and removes unwanted parts."
@@ -209,19 +216,15 @@ def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
     except ValueError: # Unicode strings with encoding declaration are not supported.
         # for XHTML files with encoding declaration, use the declared encoding
         root = lxml.html.fromstring(html_text)
+
     # add <kw> tags, protect text nodes
     add_kw_tags(root)
-    # remove comments
+    # clean DOM from useless tags
     remove_comments(root)
-    # remove head, script and style
-    to_be_removed = []
-    for node in root.iter():
-        if node.tag in ['head', 'script', 'style']:
-            to_be_removed.append(node)
-    for node in to_be_removed:
-        parent = node.getparent()
-        del parent[parent.index(node)]
+    remove_tags(root, "head", "script", "style")
+
     return root
+
 
 class SaxPragraphMaker(ContentHandler):
     """
