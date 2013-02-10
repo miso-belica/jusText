@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 import cgi
+import codecs
 
 from .core import *
 

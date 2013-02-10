@@ -9,7 +9,6 @@ This software is licensed as described in the file LICENSE.rst.
 import os
 import re
 import sys
-import codecs
 import pkgutil
 import lxml.etree
 import lxml.html
