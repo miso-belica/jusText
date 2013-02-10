@@ -40,21 +40,28 @@ class JustextError(Exception):
 class JustextInvalidOptions(JustextError):
     pass
 
+
 def get_stoplists():
-    "Returns a list of inbuilt stoplists."
-    stoplists = []
-    stoplists_dir = os.path.join(
-        os.path.dirname(sys.modules['justext'].__file__), 'stoplists')
-    for filename in os.listdir(stoplists_dir):
-        if filename.endswith('.txt'):
-            stoplists.append(filename.rsplit('.', 1)[0])
-    return stoplists
+    """Returns a collection of built-in stop-lists."""
+    path_to_stoplists = os.path.dirname(sys.modules["justext"].__file__)
+    path_to_stoplists = os.path.join(path_to_stoplists, "stoplists")
+
+    stoplist_names = []
+    for filename in os.listdir(path_to_stoplists):
+        name, extension = os.path.splitext(filename)
+        if extension == ".txt":
+            stoplist_names.append(name)
+
+    return tuple(stoplist_names)
+
 
 def get_stoplist(language):
-    "Returns an inbuilt stoplist for the language as a set of words."
-    stoplist_contents = pkgutil.get_data('justext',
-        os.path.join('stoplists', language + '.txt'))
-    return set([unicode(l.strip(), 'utf-8') for l in stoplist_contents.split('\n')])
+    """Returns an built-in stop-list for the language as a set of words."""
+    file_path = os.path.join("stoplists", "%s.txt" % language)
+    stopwords = pkgutil.get_data("justext", file_path)
+
+    return frozenset(w.decode("utf8") for w in stopwords.splitlines())
+
 
 def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
         errors=DEFAULT_ENC_ERRORS):
