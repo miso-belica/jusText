@@ -4,19 +4,21 @@
 
 jusText
 =======
-jusText is a tool for removing boilerplate content, such as navigation links,
-headers, and footers from HTML pages. It is designed to preserve mainly text
-containing full sentences and it is therefore well suited for creating
-linguistic resources such as Web corpora. You can `try it online <http://nlp.fi.muni.cz/projects/justext/>`_.
+Program jusText is a tool for removing boilerplate content, such as navigation
+links, headers, and footers from HTML pages. It is designed to preserve mainly
+text containing full sentences and it is therefore well suited for creating
+linguistic resources such as Web corpora. You can
+`try it online <http://nlp.fi.muni.cz/projects/justext/>`_.
 
-This is the a fork of original code of jusText_ hosted on Google code. Below are some "forks" that I found on GitHub:
+This is the a fork of original code of jusText_ hosted on Google code.
+Below are some "forks" that I found on GitHub:
 
 - https://github.com/chbrown/justext
 - https://github.com/says/justext
 - https://github.com/says/justext-app
 
-Instalation
------------
+Installation
+------------
 1. Make sure you have Python_ installed.
 2. Download the sources::
 
@@ -36,7 +38,7 @@ Or simply::
 
   pip install git+git@github.com:miso-belica/jusText.git
 
-Dependecies
+Dependencies
 -----------
 ::
 
@@ -79,4 +81,6 @@ Acknowledgements
 .. _`Lexical Computing Ltd.`: http://lexicalcomputing.com/
 .. _`PhD research`: http://is.muni.cz/th/45523/fi_d/phdthesis.pdf
 
-This software is developed at the `Natural Language Processing Centre`_ of `Masaryk University in Brno`_ with a financial support from PRESEMT_ and `Lexical Computing Ltd.`_ It also relates to `PhD research`_ of Jan Pomikalek.
+This software is developed at the `Natural Language Processing Centre`_ of
+`Masaryk University in Brno`_ with a financial support from PRESEMT_ and
+`Lexical Computing Ltd.`_ It also relates to `PhD research`_ of Jan Pomikálek.
