@@ -32,6 +32,8 @@ PARAGRAPH_TAGS = ['blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
         'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 DEFAULT_ENCODING = 'utf-8'
 DEFAULT_ENC_ERRORS = 'replace'
+CHARSET_META_TAG_PATTERN = re.compile(r"""<meta[^>]+charset=["']?([^'"/>\s]+)""",
+    re.IGNORECASE)
 
 class JustextError(Exception):
     "Base class for jusText exceptions."
@@ -65,36 +67,35 @@ def get_stoplist(language):
 def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
         errors=DEFAULT_ENC_ERRORS):
     """
-    Converts a string containing an HTML page (html_string) into unicode.
-    Tries to guess character encoding from meta tags.
+    Converts a `html_string` containing an HTML page into unicode.
+    Tries to guess character encoding from meta tag.
     """
+    if isinstance(html_string, unicode):
+        return html_string
+
     if encoding:
-        return unicode(html_string, encoding, errors=errors)
-    re_meta1 = re.compile('''<meta\s+http-equiv=['"]?content-type['"]?\s+content=['"]?[^'"]*charset=([^'"]+)''', re.I)
-    re_meta2 = re.compile('''<meta\s+content=['"]?[^'"]*charset=([^'"]+)['"]?\s+http-equiv=['"]?content-type['"]?''', re.I)
-    re_meta3 = re.compile('''<meta\s+http-equiv=['"]?charset['"]?\s+content=['"]?([^'"]+)''', re.I)
-    re_meta4 = re.compile('''<meta\s+content=['"]?([^'"]+)['"]?\s+http-equiv=['"]?charset['"]?''', re.I)
-    re_meta5 = re.compile('''<meta\s+charset=['"]?([^'"]+)''', re.I)
-    for re_meta in (re_meta1, re_meta2, re_meta3, re_meta4, re_meta5):
-        m = re_meta.search(html_string)
-        if m:
-            meta_encoding = m.group(1)
-            try:
-                return unicode(html_string, meta_encoding, errors=errors)
-            except LookupError:
-                # if the encoding specified in <meta> is unknown
-                # proceed as if it wasn't found at all
-                pass
-    try:
-        # if unknown encoding, try utf-8 first
-        return unicode(html_string, 'utf-8', errors='strict')
-    except UnicodeDecodeError:
-        # use default encoding if utf-8 failed
+        return html_string.decode(encoding, errors)
+
+    match = CHARSET_META_TAG_PATTERN.search(html_string)
+    if match:
+        declared_encoding = match.group(1)
         try:
-            return unicode(html_string, default_encoding, errors=errors)
-        except UnicodeDecodeError, e:
-            raise JustextError('Unable to convert the HTML to unicode from %s: %s' % (
-                default_encoding, e))
+            return html_string.decode(declared_encoding, errors)
+        except LookupError:
+            # unknown encoding - proceed as if it wasn't found at all
+            pass
+
+    # unknown encoding
+    try:
+        # try UTF-8 first
+        return html_string.decode("utf8")
+    except UnicodeDecodeError:
+        # try lucky with default encoding
+        try:
+            return html_string.decode(default_encoding)
+        except UnicodeDecodeError as e:
+            raise JustextError("Unable to decode the HTML to unicode: " + str(e))
+
 
 decode_entities_pp_trans = {
     ord(u'\x83'): u'\u0192',
