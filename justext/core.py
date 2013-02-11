@@ -223,7 +223,7 @@ class SaxPragraphMaker(ContentHandler):
         }
 
     def startElementNS(self, name, qname, attrs):
-        dummy_uri, name = name
+        name = name[1]
         self.dom.append(name)
         if name in PARAGRAPH_TAGS or (name == 'br' and self.br):
             if name == 'br':
@@ -239,7 +239,7 @@ class SaxPragraphMaker(ContentHandler):
             self.paragraph['tag_count'] += 1
 
     def endElementNS(self, name, qname):
-        dummy_uri, name = name
+        name = name[1]
         self.dom.pop()
         if name in PARAGRAPH_TAGS:
             self._start_new_pragraph()
