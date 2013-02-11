@@ -26,7 +26,7 @@ NO_HEADINGS_DEFAULT = False
 # Short and near-good headings within MAX_HEADING_DISTANCE characters before
 # a good paragraph are classified as good unless --no-headings is specified.
 MAX_HEADING_DISTANCE_DEFAULT = 200
-PARAGRAPH_TAGS = ['blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
+PARAGRAPH_TAGS = ['body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
         'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
         'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
         'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
@@ -196,7 +196,6 @@ class SaxPragraphMaker(ContentHandler):
     A class for converting a HTML page represented as a DOM object into a list
     of paragraphs.
     """
-
     def __init__(self):
         self.dom = []
         self.paragraphs = []
@@ -260,11 +259,13 @@ class SaxPragraphMaker(ContentHandler):
             self.paragraph['linked_char_count'] += len(text)
         self.br = False
 
+
 def make_paragraphs(root):
     "Converts DOM into paragraphs."
     handler = SaxPragraphMaker()
     lxml.sax.saxify(root, handler)
     return handler.paragraphs
+
 
 def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
