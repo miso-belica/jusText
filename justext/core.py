@@ -206,7 +206,7 @@ class SaxPragraphMaker(ContentHandler):
         self._start_new_pragraph()
 
     def _start_new_pragraph(self):
-        if self.paragraph and self.paragraph['text_nodes'] != []:
+        if self.paragraph and self.paragraph['text_nodes']:
             text = ''.join(self.paragraph['text_nodes'])
             text = normalize_whitespace(text.strip())
             self.paragraph['text'] = text
