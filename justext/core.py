@@ -142,45 +142,6 @@ def is_blank(string):
     return not bool(string.lstrip())
 
 
-def add_kw_tags(root):
-    """
-    Surrounds text nodes with <kw></kw> tags. To protect text nodes from
-    being removed with nearby tags.
-    """
-    nodes_with_text = []
-    nodes_with_tail = []
-    for node in root.iter():
-        # temporary workaround for issue #2 caused by a bug #690110 in lxml
-        try:
-            node.text
-        except UnicodeDecodeError:
-            # remove any text that can't be decoded
-            node.text = ''
-
-        if node.text and node.tag not in (lxml.etree.Comment, lxml.etree.ProcessingInstruction):
-            nodes_with_text.append(node)
-        if node.tail:
-            nodes_with_tail.append(node)
-    for node in nodes_with_text:
-        if is_blank(node.text):
-            node.text = None
-        else:
-            kw = lxml.etree.Element('kw')
-            kw.text = node.text
-            node.text = None
-            node.insert(0, kw)
-    for node in nodes_with_tail:
-        if is_blank(node.tail):
-            node.tail = None
-        else:
-            kw = lxml.etree.Element('kw')
-            kw.text = node.tail
-            node.tail = None
-            parent = node.getparent()
-            parent.insert(parent.index(node) + 1, kw)
-    return root
-
-
 def remove_comments(root):
     "Removes comment nodes."
     comments = []
@@ -217,8 +178,6 @@ def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
         # for XHTML files with encoding declaration, use the declared encoding
         root = lxml.html.fromstring(html_text)
 
-    # add <kw> tags, protect text nodes
-    add_kw_tags(root)
     # clean DOM from useless tags
     remove_comments(root)
     remove_tags(root, "head", "script", "style")
