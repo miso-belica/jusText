@@ -271,7 +271,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         no_headings=NO_HEADINGS_DEFAULT):
-    "Context-free pragraph classification."
+    "Context-free paragraph classification."
     for paragraph in paragraphs:
         length = len(paragraph['text'])
         stopword_count = 0

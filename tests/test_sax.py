@@ -102,7 +102,7 @@ class TestSax(unittest.TestCase):
             word_count=2, tag_count=0)
 
     def test_inline_text_in_body(self):
-        """Inline text should be treated as separate paragraph"""
+        """Inline text should be treated as separate paragraph."""
         html_string = (
             '<html><body>'
             '<sup>I am <strong>top</strong>-inline\n\n\n\n and I am happy \n</sup>'
