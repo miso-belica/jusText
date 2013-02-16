@@ -131,3 +131,34 @@ class TestSax(unittest.TestCase):
 
         self.asserParagraphsEqual(paragraphs[4], word_count=7, tag_count=0,
             text="I am inline and I am happy")
+
+    def test_links(self):
+        """Inline text should be treated as separate paragraph."""
+        html_string = (
+            '<html><body>'
+            '<a>I am <strong>top</strong>-inline\n\n\n\n and I am happy \n</a>'
+            '<p>normal text</p>'
+            '<code>\nvar i = -INFINITY;\n</code>'
+            '<div>after <a>text</a> with variable <var>N</var> </div>'
+            '   I am inline\n\n\n\n and I am happy \n'
+            '</body></html>'
+        )
+        dom = html.fromstring(html_string)
+
+        paragraphs = make_paragraphs(dom)
+        self.assertEqual(len(paragraphs), 5)
+
+        self.asserParagraphsEqual(paragraphs[0], word_count=7, tag_count=2,
+            text="I am top-inline and I am happy", linked_char_count=31)
+
+        self.asserParagraphsEqual(paragraphs[1], word_count=2, tag_count=0,
+            text="normal text")
+
+        self.asserParagraphsEqual(paragraphs[2], word_count=4, tag_count=1,
+            text="var i = -INFINITY;")
+
+        self.asserParagraphsEqual(paragraphs[3], word_count=5, tag_count=2,
+            text="after text with variable N", linked_char_count=4)
+
+        self.asserParagraphsEqual(paragraphs[4], word_count=7, tag_count=0,
+            text="I am inline and I am happy")
