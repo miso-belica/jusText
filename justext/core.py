@@ -15,6 +15,7 @@ import lxml.html
 import lxml.sax
 
 from xml.sax.handler import ContentHandler
+from .paragraph import Paragraph
 
 
 MAX_LINK_DENSITY_DEFAULT = 0.2
@@ -185,57 +186,48 @@ def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
     return root
 
 
-MULTIPLE_WHITESPACE_PATTERN = re.compile(r"\s+", re.UNICODE)
-def normalize_whitespace(string):
-    """Translates multiple white-space into single space."""
-    return MULTIPLE_WHITESPACE_PATTERN.sub(" ", string)
-
-
-class SaxPragraphMaker(ContentHandler):
+class ParagraphMaker(ContentHandler):
     """
     A class for converting a HTML page represented as a DOM object into a list
     of paragraphs.
     """
+
+    @classmethod
+    def make_paragraphs(cls, root):
+        """Converts DOM into paragraphs."""
+        handler = cls()
+        lxml.sax.saxify(root, handler)
+        return handler.paragraphs
+
     def __init__(self):
         self.dom = []
         self.paragraphs = []
-        self.paragraph = {}
+        self.paragraph = None
         self.link = False
         self.br = False
         self._start_new_pragraph()
 
     def _start_new_pragraph(self):
-        if self.paragraph and self.paragraph['text_nodes']:
-            text = ''.join(self.paragraph['text_nodes'])
-            text = normalize_whitespace(text.strip())
-            self.paragraph['text'] = text
-            self.paragraph['word_count'] = len(text.split())
-
+        if self.paragraph and self.paragraph.contains_text():
             self.paragraphs.append(self.paragraph)
 
-        self.paragraph = {
-            'dom_path': '.'.join(self.dom),
-            'text_nodes': [],
-            'word_count': 0,
-            'linked_char_count': 0,
-            'tag_count': 0,
-        }
+        self.paragraph = Paragraph(self.dom)
 
     def startElementNS(self, name, qname, attrs):
         name = name[1]
         self.dom.append(name)
-        if name in PARAGRAPH_TAGS or (name == 'br' and self.br):
-            if name == 'br':
+        if name in PARAGRAPH_TAGS or (name == "br" and self.br):
+            if name == "br":
                 # the <br><br> is a paragraph separator and should
                 # not be included in the number of tags within the
                 # paragraph
-                self.paragraph['tag_count'] -= 1
+                self.paragraph.tags_count -= 1
             self._start_new_pragraph()
         else:
             self.br = bool(name == "br")
             if name == 'a':
                 self.link = True
-            self.paragraph['tag_count'] += 1
+            self.paragraph.tags_count += 1
 
     def endElementNS(self, name, qname):
         name = name[1]
@@ -252,19 +244,11 @@ class SaxPragraphMaker(ContentHandler):
         if is_blank(content):
             return
 
-        text = normalize_whitespace(content)
-        self.paragraph['text_nodes'].append(text)
+        text = self.paragraph.append_text(content)
 
         if self.link:
-            self.paragraph['linked_char_count'] += len(text)
+            self.paragraph.chars_count_in_links += len(text)
         self.br = False
-
-
-def make_paragraphs(root):
-    "Converts DOM into paragraphs."
-    handler = SaxPragraphMaker()
-    lxml.sax.saxify(root, handler)
-    return handler.paragraphs
 
 
 def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
@@ -273,50 +257,36 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         no_headings=NO_HEADINGS_DEFAULT):
     "Context-free paragraph classification."
     for paragraph in paragraphs:
-        length = len(paragraph['text'])
-        stopword_count = 0
-        for word in paragraph['text'].split():
-            if word in stoplist:
-                stopword_count += 1
-        word_count = paragraph['word_count']
-        if word_count == 0:
-            stopword_density = 0
-            link_density = 0
-        else:
-            stopword_density = 1.0 * stopword_count / word_count
-            link_density = float(paragraph['linked_char_count']) / length
-        paragraph['stopword_count'] = stopword_count
-        paragraph['stopword_density'] = stopword_density
-        paragraph['link_density'] = link_density
+        length = len(paragraph)
+        stopword_density = paragraph.stopwords_density(stoplist)
+        link_density = paragraph.links_density()
+        paragraph.heading = bool(not no_headings and paragraph.is_heading)
 
-        paragraph['heading'] = bool(not no_headings and re.search('(^h\d|\.h\d)', paragraph['dom_path']))
         if link_density > max_link_density:
-            paragraph['cfclass'] = 'bad'
-        elif (u'\xa9' in paragraph['text']) or ('&copy' in paragraph['text']):
-            paragraph['cfclass'] = 'bad'
-        elif re.search('(^select|\.select)', paragraph['dom_path']):
-            paragraph['cfclass'] = 'bad'
-        else:
-            if length < length_low:
-                if paragraph['linked_char_count'] > 0:
-                    paragraph['cfclass'] = 'bad'
-                else:
-                    paragraph['cfclass'] = 'short'
+            paragraph.cf_class = 'bad'
+        elif (u'\xa9' in paragraph.text) or ('&copy' in paragraph.text):
+            paragraph.cf_class = 'bad'
+        elif re.search('^select|\.select', paragraph.dom_path):
+            paragraph.cf_class = 'bad'
+        elif length < length_low:
+            if paragraph.chars_count_in_links > 0:
+                paragraph.cf_class = 'bad'
             else:
-                if stopword_density >= stopwords_high:
-                    if length > length_high:
-                        paragraph['cfclass'] = 'good'
-                    else:
-                        paragraph['cfclass'] = 'neargood'
-                elif stopword_density >= stopwords_low:
-                    paragraph['cfclass'] = 'neargood'
-                else:
-                    paragraph['cfclass'] = 'bad'
+                paragraph.cf_class = 'short'
+        elif stopword_density >= stopwords_high:
+            if length > length_high:
+                paragraph.cf_class = 'good'
+            else:
+                paragraph.cf_class = 'neargood'
+        elif stopword_density >= stopwords_low:
+            paragraph.cf_class = 'neargood'
+        else:
+            paragraph.cf_class = 'bad'
 
 def _get_neighbour(i, paragraphs, ignore_neargood, inc, boundary):
     while i + inc != boundary:
         i += inc
-        c = paragraphs[i]['class']
+        c = paragraphs[i].class_type
         if c in ['good', 'bad']:
             return c
         if c == 'neargood' and not ignore_neargood:
@@ -346,25 +316,25 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
     """
     # copy classes
     for paragraph in paragraphs:
-        paragraph['class'] = paragraph['cfclass']
+        paragraph.class_type = paragraph.cf_class
 
     # good headings
     for i, paragraph in enumerate(paragraphs):
-        if not (paragraph['heading'] and paragraph['class'] == 'short'):
+        if not (paragraph.heading and paragraph.class_type == 'short'):
             continue
         j = i + 1
         distance = 0
         while j < len(paragraphs) and distance <= max_heading_distance:
-            if paragraphs[j]['class'] == 'good':
-                paragraph['class'] = 'neargood'
+            if paragraphs[j].class_type == 'good':
+                paragraph.class_type = 'neargood'
                 break
-            distance += len(paragraphs[j]['text'])
+            distance += len(paragraphs[j].text)
             j += 1
 
     # classify short
     new_classes = {}
     for i, paragraph in enumerate(paragraphs):
-        if paragraph['class'] != 'short':
+        if paragraph.class_type != 'short':
             continue
         prev_neighbour = get_prev_neighbour(i, paragraphs, ignore_neargood=True)
         next_neighbour = get_next_neighbour(i, paragraphs, ignore_neargood=True)
@@ -381,30 +351,30 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
             new_classes[i] = 'bad'
 
     for i, c in new_classes.iteritems():
-        paragraphs[i]['class'] = c
+        paragraphs[i].class_type = c
 
     # revise neargood
     for i, paragraph in enumerate(paragraphs):
-        if paragraph['class'] != 'neargood':
+        if paragraph.class_type != 'neargood':
             continue
         prev_neighbour = get_prev_neighbour(i, paragraphs, ignore_neargood=True)
         next_neighbour = get_next_neighbour(i, paragraphs, ignore_neargood=True)
         if (prev_neighbour, next_neighbour) == ('bad', 'bad'):
-            paragraph['class'] = 'bad'
+            paragraph.class_type = 'bad'
         else:
-            paragraph['class'] = 'good'
+            paragraph.class_type = 'good'
 
     # more good headings
     for i, paragraph in enumerate(paragraphs):
-        if not (paragraph['heading'] and paragraph['class'] == 'bad' and paragraph['cfclass'] != 'bad'):
+        if not (paragraph.heading and paragraph.class_type == 'bad' and paragraph.cf_class != 'bad'):
             continue
         j = i + 1
         distance = 0
         while j < len(paragraphs) and distance <= max_heading_distance:
-            if paragraphs[j]['class'] == 'good':
-                paragraph['class'] = 'good'
+            if paragraphs[j].class_type == 'good':
+                paragraph.class_type = 'good'
                 break
-            distance += len(paragraphs[j]['text'])
+            distance += len(paragraphs[j].text)
             j += 1
 
 def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
@@ -450,7 +420,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     """
     root = preprocess(html_text, encoding=encoding,
         default_encoding=default_encoding, enc_errors=enc_errors)
-    paragraphs = make_paragraphs(root)
+    paragraphs = ParagraphMaker.make_paragraphs(root)
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
         stopwords_low, stopwords_high, max_link_density, no_headings)
     revise_paragraph_classification(paragraphs, max_heading_distance)

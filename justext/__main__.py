@@ -76,8 +76,8 @@ def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
     standard paragraph, heading or boilerplate respecitvely.
     """
     for paragraph in paragraphs:
-        if paragraph['class'] == 'good':
-            if paragraph['heading']:
+        if paragraph.class_type == 'good':
+            if paragraph.heading:
                 tag = 'h'
             else:
                 tag = 'p'
@@ -86,7 +86,7 @@ def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
                 continue
             else:
                 tag = 'b'
-        print >> fp, '<%s> %s' % (tag, cgi.escape(paragraph['text'].strip()))
+        print >> fp, '<%s> %s' % (tag, cgi.escape(paragraph.text.strip()))
 
 
 def output_detailed(paragraphs, fp=sys.stdout):
@@ -96,8 +96,8 @@ def output_detailed(paragraphs, fp=sys.stdout):
     """
     for paragraph in paragraphs:
         print >> fp, '<p class="%s" cfclass="%s" heading="%i"> %s' % (
-            paragraph['class'], paragraph['cfclass'],
-            int(paragraph['heading']), cgi.escape(paragraph['text'].strip()))
+            paragraph.class_type, paragraph.cf_class,
+            int(paragraph.heading), cgi.escape(paragraph.text.strip()))
 
 
 def output_krdwrd(paragraphs, fp=sys.stdout):
@@ -111,14 +111,14 @@ def output_krdwrd(paragraphs, fp=sys.stdout):
     undecided.
     """
     for paragraph in paragraphs:
-        if paragraph['class'] in ('good', 'neargood'):
-            if paragraph['heading']:
+        if paragraph.class_type in ('good', 'neargood'):
+            if paragraph.heading:
                 cls = 2
             else:
                 cls = 3
         else:
             cls = 1
-        for text_node in paragraph['text_nodes']:
+        for text_node in paragraph.text_nodes:
             print >> fp, '%i\t%s' % (cls, text_node.strip())
 
 

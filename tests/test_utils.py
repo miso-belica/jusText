@@ -9,7 +9,8 @@ import unittest
 from os import pardir
 from os.path import dirname, abspath, join
 sys.path.insert(0, join(dirname(abspath(__file__)), pardir))
-from justext.core import is_blank, normalize_whitespace
+from justext.paragraph import normalize_whitespace
+from justext.core import is_blank
 
 
 class TestUtils(unittest.TestCase):
