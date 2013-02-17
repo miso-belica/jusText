@@ -10,7 +10,7 @@ text containing full sentences and it is therefore well suited for creating
 linguistic resources such as Web corpora. You can
 `try it online <http://nlp.fi.muni.cz/projects/justext/>`_.
 
-This is the a fork of original code of jusText_ hosted on Google code.
+This is a fork of original code of jusText_ hosted on Google Code.
 Below are some "forks" that I found on GitHub:
 
 - https://github.com/andreypopp/extracty/tree/master/justext
