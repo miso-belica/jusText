@@ -38,7 +38,7 @@ Installation
 
 Or simply::
 
-  pip install git+git@github.com:miso-belica/jusText.git
+  pip install git+git://github.com/miso-belica/jusText.git
 
 Dependencies
 -----------
