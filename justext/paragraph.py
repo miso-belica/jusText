@@ -25,6 +25,10 @@ class Paragraph(object):
         return bool(re.search(r"\bh\d\b", self.dom_path))
 
     @property
+    def is_boilerplate(self):
+        return self.class_type != "good"
+
+    @property
     def text(self):
         text = "".join(self.text_nodes)
         return normalize_whitespace(text.strip())
