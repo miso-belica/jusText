@@ -11,8 +11,13 @@ linguistic resources such as Web corpora. You can
 `try it online <http://nlp.fi.muni.cz/projects/justext/>`_.
 
 This is a fork of original code of jusText_ hosted on Google Code.
-Below are some "forks" that I found on GitHub:
+Below are some "forks" that I found:
 
+- http://code.google.com/p/boilerpipe/
+- http://sourceforge.net/projects/webascorpus/?source=navbar
+- https://github.com/jiminoc/goose
+
+- https://github.com/JalfResi/justext
 - https://github.com/andreypopp/extracty/tree/master/justext
 - https://github.com/dreamindustries/jaws/tree/master/justext
 - https://github.com/says/justext
