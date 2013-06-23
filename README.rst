@@ -24,32 +24,32 @@ Below are some "forks" that I found:
 - https://github.com/chbrown/justext
 - https://github.com/says/justext-app
 
+
 Installation
 ------------
-1. Make sure you have Python_ installed.
-2. Download the sources::
+Make sure you have Python_ installed.
 
-     $ wget https://github.com/miso-belica/jusText/archive/master.zip
+.. code-block:: bash
 
-3. Extract the downloaded file::
+  $ wget https://github.com/miso-belica/jusText/archive/master.zip # download the sources
+  $ unzip master.zip # extract the downloaded file
+  $ jusText-master/
+  $ [sudo] python setup.py install # install the package
 
-     $ unzip master.zip
 
-4. Install the package (you may need sudo or a root shell for the latter
-   command)::
+Or simply:
 
-     $ cd jusText-master/
-     $ python setup.py install
+.. code-block:: bash
 
-Or simply::
+  $ [sudo] pip install git+git://github.com/miso-belica/jusText.git
 
-  pip install git+git://github.com/miso-belica/jusText.git
 
 Dependencies
 -----------
 ::
 
   lxml>=2.2.4
+
 
 Usage
 -----
@@ -58,6 +58,7 @@ Usage
   $ python -m justext -s Czech --url=http://www.zdrojak.cz/clanky/automaticke-zabezpeceni/ > text.txt
   $ python -m justext -s English english_page.html > plain_text.txt
   $ python -m justext --help # for more info
+
 
 Python API
 ----------
@@ -72,6 +73,7 @@ Python API
     if not paragraph.is_boilerplate:
       print paragraph.text
 
+
 Testing
 -------
 Run tests via
@@ -80,6 +82,7 @@ Run tests via
 
   $ cd tests
   $ python -tt -Wall -B -3 -m unittest discover
+
 
 Acknowledgements
 ----------------
