@@ -134,8 +134,8 @@ def main():
             "no-headings", "help", "version", "length-low=", "length-high=",
             "stopwords-low=", "stopwords-high=", "max-link-density=",
             "max-heading-distance=", "list-stoplists"])
-    except getopt.GetoptError, err:
-        print >> sys.stderr, err
+    except getopt.GetoptError as e:
+        print >> sys.stderr, e
         print >> sys.stderr, usage()
         sys.exit(1)
 
@@ -171,7 +171,7 @@ def main():
             elif o == "-o":
                 try:
                     fp_out = codecs.open(a, 'w', 'utf-8')
-                except IOError, e:
+                except IOError as e:
                     raise JustextInvalidOptions(
                         "Can't open %s for writing: %s" % (a, e))
             elif o == "-s":
@@ -183,10 +183,10 @@ def main():
                             fp_stoplist = codecs.open(a, 'r', 'utf-8')
                             stoplist = set([l.strip() for l in fp_stoplist])
                             fp_stoplist.close()
-                        except IOError, e:
+                        except IOError as e:
                             raise JustextInvalidOptions(
                                 "Can't open %s for reading: %s" % (a, e))
-                        except UnicodeDecodeError, e:
+                        except UnicodeDecodeError as e:
                             raise JustextInvalidOptions(
                                 "Unicode decoding error when reading " \
                                 "the stoplist (probably not in utf-8): %s" % e)
@@ -300,7 +300,7 @@ def main():
             # this should not happen; format checked when parsing options
             raise AssertionError("Unknown format: %s" % format)
 
-    except JustextError, e:
+    except JustextError as e:
         print >> sys.stderr, "%s: %s" % (os.path.basename(sys.argv[0]), e)
         sys.exit(1)
 
