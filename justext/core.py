@@ -37,7 +37,7 @@ PARAGRAPH_TAGS = [
     'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
     'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
 ]
-DEFAULT_ENCODING = 'utf-8'
+DEFAULT_ENCODING = 'utf8'
 DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""",
     re.IGNORECASE)
