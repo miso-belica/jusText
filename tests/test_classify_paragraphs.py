@@ -3,12 +3,8 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
-import sys
 import unittest
 
-from os import pardir
-from os.path import dirname, abspath, join
-sys.path.insert(0, join(dirname(abspath(__file__)), pardir))
 from justext.core import classify_paragraphs
 from justext.paragraph import Paragraph
 
