@@ -33,7 +33,14 @@ setup(
     author_email="miso.belica@gmail.com",
     url="https://github.com/miso-belica/jusText",
     license=license,
-    install_requires=["lxml>=2.2.4"],
+    install_requires=[
+        "lxml>=2.2.4",
+    ],
+    tests_require=[
+        "nose",
+        "coverage",
+    ],
+    test_suite="nose.collector",
     packages=["justext"],
     package_data={"justext": ["stoplists/*.txt"]},
     classifiers=(

@@ -4,6 +4,9 @@
 
 jusText
 =======
+.. image:: https://api.travis-ci.org/miso-belica/jusText.png?branch=master
+  :target: https://travis-ci.org/miso-belica/jusText
+
 Program jusText is a tool for removing boilerplate content, such as navigation
 links, headers, and footers from HTML pages. It is designed to preserve mainly
 text containing full sentences and it is therefore well suited for creating
@@ -80,8 +83,7 @@ Run tests via
 
 .. code-block:: bash
 
-  $ cd tests
-  $ python -tt -Wall -B -3 -m unittest discover
+  $ nosetests tests
 
 
 Acknowledgements
