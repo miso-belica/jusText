@@ -89,7 +89,7 @@ def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
                 continue
             else:
                 tag = 'b'
-        print('<%s> %s' % (tag, cgi.escape(paragraph.text.strip())), file=fp)
+        print('<%s> %s' % (tag, cgi.escape(paragraph.text)), file=fp)
 
 
 def output_detailed(paragraphs, fp=sys.stdout):
@@ -100,7 +100,7 @@ def output_detailed(paragraphs, fp=sys.stdout):
     for paragraph in paragraphs:
         print('<p class="%s" cfclass="%s" heading="%i"> %s' % (
             paragraph.class_type, paragraph.cf_class,
-            int(paragraph.heading), cgi.escape(paragraph.text.strip())), file=fp)
+            int(paragraph.heading), cgi.escape(paragraph.text)), file=fp)
 
 
 def output_krdwrd(paragraphs, fp=sys.stdout):
