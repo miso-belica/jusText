@@ -206,7 +206,7 @@ def main():
             elif o == "--encoding":
                 try:
                     default_encoding = a
-                    u''.encode(default_encoding)
+                    ''.encode(default_encoding)
                 except LookupError:
                     raise JustextInvalidOptions("Uknown character encoding: %s" % a)
             elif o == "--enc-force":
