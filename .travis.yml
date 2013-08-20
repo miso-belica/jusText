@@ -2,8 +2,8 @@ language: python
 python:
   - "2.7"
   - "2.6"
-  # - "3.2"
-  # - "3.3"
+  - "3.2"
+  - "3.3"
 before_install:
   - sudo apt-get install libxml2-dev libxslt-dev
 # command to install dependencies

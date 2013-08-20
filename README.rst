@@ -30,7 +30,7 @@ on Google Code. Below are some "forks" that I found:
 
 Installation
 ------------
-Make sure you have Python_ installed.
+Make sure you have Python_ 2.6+/3.2+ installed.
 
 .. code-block:: bash
 
