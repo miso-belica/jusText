@@ -58,8 +58,8 @@ Usage
 -----
 .. code-block:: bash
 
-  $ python -m justext -s Czech http://www.zdrojak.cz/clanky/automaticke-zabezpeceni/ > text.txt
-  $ python -m justext -s English english_page.html > plain_text.txt
+  $ python -m justext -s Czech -o text.txt http://www.zdrojak.cz/clanky/automaticke-zabezpeceni/
+  $ python -m justext -s English -o plain_text.txt english_page.html
   $ python -m justext --help # for more info
 
 

@@ -6,6 +6,9 @@ Copyright (c) 2011 Jan Pomikalek
 This software is licensed as described in the file LICENSE.rst.
 """
 
+from __future__ import absolute_import
+from __future__ import division, print_function, unicode_literals
+
 import os
 import re
 import sys
@@ -16,6 +19,7 @@ import lxml.sax
 
 from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
+from ._compat import unicode
 
 
 MAX_LINK_DENSITY_DEFAULT = 0.2
@@ -33,7 +37,7 @@ PARAGRAPH_TAGS = ['body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 
         'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
 DEFAULT_ENCODING = 'utf-8'
 DEFAULT_ENC_ERRORS = 'replace'
-CHARSET_META_TAG_PATTERN = re.compile(r"""<meta[^>]+charset=["']?([^'"/>\s]+)""",
+CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""",
     re.IGNORECASE)
 
 class JustextError(Exception):
@@ -79,7 +83,7 @@ def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
 
     match = CHARSET_META_TAG_PATTERN.search(html_string)
     if match:
-        declared_encoding = match.group(1)
+        declared_encoding = match.group(1).decode("ASCII")
         try:
             return html_string.decode(declared_encoding, errors)
         except LookupError:
@@ -95,7 +99,7 @@ def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
         try:
             return html_string.decode(default_encoding)
         except UnicodeDecodeError as e:
-            raise JustextError("Unable to decode the HTML to Unicode: " + str(e))
+            raise JustextError("Unable to decode the HTML to Unicode: " + unicode(e))
 
 
 decode_entities_pp_trans = {
@@ -350,7 +354,7 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
         else:
             new_classes[i] = 'bad'
 
-    for i, c in new_classes.iteritems():
+    for i, c in new_classes.items():
         paragraphs[i].class_type = c
 
     # revise neargood

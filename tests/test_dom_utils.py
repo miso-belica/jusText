@@ -20,13 +20,13 @@ class TestDomUtils(unittest.TestCase):
         )
 
         expected = '<html><!-- comment --><body><h1>Header</h1><!-- comment --> text<p>footer</p></body></html>'
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(expected, returned)
 
         remove_comments(dom)
 
         expected = '<html><body><h1>Header</h1> text<p>footer</p></body></html>'
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(expected, returned)
 
     def test_remove_tags_1(self):
@@ -39,11 +39,11 @@ class TestDomUtils(unittest.TestCase):
         )
 
         dom = html.fromstring(html_string)
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(html_string, returned)
 
         remove_tags(dom, "head", "em")
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><body>'
             '<h1>Header</h1>'
@@ -63,11 +63,11 @@ class TestDomUtils(unittest.TestCase):
         )
 
         dom = html.fromstring(html_string)
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(html_string, returned)
 
         remove_tags(dom, "span")
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><head><title>Title</title></head><body>'
             '<h1>Header</h1>'
@@ -87,11 +87,11 @@ class TestDomUtils(unittest.TestCase):
         )
 
         dom = html.fromstring(html_string)
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(html_string, returned)
 
         remove_tags(dom, "em")
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><head><title>Title</title></head><body>'
             '<h1>Header</h1>'

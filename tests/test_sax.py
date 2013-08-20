@@ -20,7 +20,7 @@ class TestSax(unittest.TestCase):
         html_string = '<html><body></body></html>'
         dom = html.fromstring(html_string)
 
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(html_string, returned)
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
@@ -36,7 +36,7 @@ class TestSax(unittest.TestCase):
         )
         dom = html.fromstring(html_string)
 
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(html_string, returned)
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
@@ -60,7 +60,7 @@ class TestSax(unittest.TestCase):
         )
         dom = html.fromstring(html_string)
 
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(html_string, returned)
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
@@ -86,7 +86,7 @@ class TestSax(unittest.TestCase):
         )
         dom = html.fromstring(html_string)
 
-        returned = html.tostring(dom)
+        returned = html.tostring(dom).decode("utf8")
         self.assertEqual(html_string, returned)
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)

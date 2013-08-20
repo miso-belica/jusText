@@ -1,13 +1,14 @@
 # -*- coding: utf8 -*-
 
 from __future__ import absolute_import
+from __future__ import division, print_function, unicode_literals
 
 import re
 import cgi
 import codecs
-import urllib2
 
 from .core import *
+from ._compat import urllib, URLError
 
 
 def usage():
@@ -88,7 +89,7 @@ def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
                 continue
             else:
                 tag = 'b'
-        print >> fp, '<%s> %s' % (tag, cgi.escape(paragraph.text.strip()))
+        print('<%s> %s' % (tag, cgi.escape(paragraph.text.strip())), file=fp)
 
 
 def output_detailed(paragraphs, fp=sys.stdout):
@@ -97,9 +98,9 @@ def output_detailed(paragraphs, fp=sys.stdout):
     attributes are added: class, cfclass and heading.
     """
     for paragraph in paragraphs:
-        print >> fp, '<p class="%s" cfclass="%s" heading="%i"> %s' % (
+        print('<p class="%s" cfclass="%s" heading="%i"> %s' % (
             paragraph.class_type, paragraph.cf_class,
-            int(paragraph.heading), cgi.escape(paragraph.text.strip()))
+            int(paragraph.heading), cgi.escape(paragraph.text.strip())), file=fp)
 
 
 def output_krdwrd(paragraphs, fp=sys.stdout):
@@ -121,7 +122,7 @@ def output_krdwrd(paragraphs, fp=sys.stdout):
         else:
             cls = 1
         for text_node in paragraph.text_nodes:
-            print >> fp, '%i\t%s' % (cls, text_node.strip())
+            print('%i\t%s' % (cls, text_node.strip()), file=fp)
 
 
 def main():
@@ -135,8 +136,8 @@ def main():
             "stopwords-low=", "stopwords-high=", "max-link-density=",
             "max-heading-distance=", "list-stoplists"])
     except getopt.GetoptError as e:
-        print >> sys.stderr, e
-        print >> sys.stderr, usage()
+        print(e, file=sys.stderr)
+        print(usage(), file=sys.stderr)
         sys.exit(1)
 
     stream_writer = codecs.lookup('utf-8')[-1]
@@ -159,14 +160,14 @@ def main():
     try:
         for o, a in opts:
             if o in ("-h", "--help"):
-                print usage()
+                print(usage())
                 sys.exit(0)
             if o in ("-V", "--version"):
-                print "%s: jusText v%s\n\nCopyright (c) 2011 Jan Pomikalek <jan.pomikalek@gmail.com>" % (
-                    os.path.basename(sys.argv[0]), VERSION)
+                print("%s: jusText v%s\n\nCopyright (c) 2011 Jan Pomikalek <jan.pomikalek@gmail.com>" % (
+                    os.path.basename(sys.argv[0]), VERSION))
                 sys.exit(0)
             elif o == "--list-stoplists":
-                print "\n".join(get_stoplists())
+                print("\n".join(get_stoplists()))
                 sys.exit(0)
             elif o == "-o":
                 try:
@@ -273,10 +274,10 @@ def main():
         if args:
             try:
                 if re.match(r"[^:/]+://", args[0]):
-                    fp_in = urllib2.urlopen(args[0])
+                    fp_in = urllib.urlopen(args[0])
                 else:
                     fp_in = open(args[0], 'r')
-            except (IOError, urllib2.URLError) as e:
+            except (IOError, URLError) as e:
                 raise JustextInvalidOptions(
                     "Can't open %s for reading: %s" % (args[0], e))
                 sys.exit(1)
@@ -301,7 +302,7 @@ def main():
             raise AssertionError("Unknown format: %s" % format)
 
     except JustextError as e:
-        print >> sys.stderr, "%s: %s" % (os.path.basename(sys.argv[0]), e)
+        print("%s: %s" % (os.path.basename(sys.argv[0]), e), file=sys.stderr)
         sys.exit(1)
 
 
