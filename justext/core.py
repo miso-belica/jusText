@@ -31,10 +31,12 @@ NO_HEADINGS_DEFAULT = False
 # Short and near-good headings within MAX_HEADING_DISTANCE characters before
 # a good paragraph are classified as good unless --no-headings is specified.
 MAX_HEADING_DISTANCE_DEFAULT = 200
-PARAGRAPH_TAGS = ['body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
-        'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
-        'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
-        'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+PARAGRAPH_TAGS = [
+    'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
+    'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
+    'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
+    'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+]
 DEFAULT_ENCODING = 'utf-8'
 DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""",

@@ -46,7 +46,7 @@ STOPLIST must be one of the following:
   - one of the inbuilt stoplists; see:
       %(progname)s --list-stoplists
   - path to a file with the most frequent words for given language,
-    one per line, in utf-8 encoding
+    one per line, in UTF-8 encoding
   - None - this activates a language-independent mode
 
 Advanced options:
@@ -140,7 +140,7 @@ def main():
         print(usage(), file=sys.stderr)
         sys.exit(1)
 
-    stream_writer = codecs.lookup('utf-8')[-1]
+    stream_writer = codecs.lookup('utf8')[-1]
     fp_in = sys.stdin
     fp_out = stream_writer(sys.stdout)
     stoplist = None
@@ -171,7 +171,7 @@ def main():
                 sys.exit(0)
             elif o == "-o":
                 try:
-                    fp_out = codecs.open(a, 'w', 'utf-8')
+                    fp_out = codecs.open(a, 'w', 'utf8')
                 except IOError as e:
                     raise JustextInvalidOptions(
                         "Can't open %s for writing: %s" % (a, e))
@@ -181,7 +181,7 @@ def main():
                 else:
                     if os.path.isfile(a):
                         try:
-                            fp_stoplist = codecs.open(a, 'r', 'utf-8')
+                            fp_stoplist = codecs.open(a, 'r', 'utf8')
                             stoplist = set([l.strip() for l in fp_stoplist])
                             fp_stoplist.close()
                         except IOError as e:
@@ -190,7 +190,7 @@ def main():
                         except UnicodeDecodeError as e:
                             raise JustextInvalidOptions(
                                 "Unicode decoding error when reading " \
-                                "the stoplist (probably not in utf-8): %s" % e)
+                                "the stoplist (probably not in UTF-8): %s" % e)
                     elif a in get_stoplists():
                         stoplist = get_stoplist(a)
                     else:
