@@ -5,6 +5,7 @@ from __future__ import absolute_import
 import re
 import cgi
 import codecs
+import urllib2
 
 from .core import *
 
@@ -129,7 +130,7 @@ def main():
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "o:s:hV", ["encoding=",
-            "enc-force", "enc-errors=", "format=", "url=",
+            "enc-force", "enc-errors=", "format=",
             "no-headings", "help", "version", "length-low=", "length-high=",
             "stopwords-low=", "stopwords-high=", "max-link-density=",
             "max-heading-distance=", "list-stoplists"])
@@ -201,10 +202,6 @@ def main():
                         else:
                             # probably incorrectly specified path
                             raise JustextInvalidOptions("File not found: %s" % a)
-            elif o == "--url":
-                import urllib2
-                fp_in = urllib2.urlopen(a)
-                del urllib2
             elif o == "--encoding":
                 try:
                     default_encoding = a
@@ -275,8 +272,11 @@ def main():
 
         if args:
             try:
-                fp_in = open(args[0], 'r')
-            except IOError, e:
+                if re.match(r"[^:/]+://", args[0]):
+                    fp_in = urllib2.urlopen(args[0])
+                else:
+                    fp_in = open(args[0], 'r')
+            except (IOError, urllib2.URLError) as e:
                 raise JustextInvalidOptions(
                     "Can't open %s for reading: %s" % (args[0], e))
                 sys.exit(1)

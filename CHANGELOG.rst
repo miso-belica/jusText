@@ -6,7 +6,7 @@ Changelog for jusText
   ``justext.paragraph.Paragraph``.
 - *INCOMPATIBLE CHANGE:* Script 'justext' removed in favour of
   command `python -m justext`.
-- *FEATURE:* Option "--url" added to CLI.
+- *FEATURE:* It's possible to enter an URI as input document in CLI.
 - *FEATURE:* It is possible to pass unicode string directly.
 
 1.2 (2011-08-08)
