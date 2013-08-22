@@ -80,20 +80,17 @@ class TestHtmlEncoding(unittest.TestCase):
 
         self.assert_strings_equal(html, decoded_html)
 
-
     def test_meta_detection_charset_outside_1(self):
         html = '<meta charset="iso-8859-2"/> charset="iso-fake-29" ľščťžäňôě'
         decoded_html = decode_html(html.encode("iso-8859-2"))
 
         self.assert_strings_equal(html, decoded_html)
 
-
     def test_meta_detection_charset_outside_2(self):
         html = '<meta content=text/html; charset=iso-8859-2 http-equiv="Content-Type"/> charset="iso-fake-29" ľščťžäňôě'
         decoded_html = decode_html(html.encode("iso-8859-2"))
 
         self.assert_strings_equal(html, decoded_html)
-
 
     def test_meta_detection_charset_outside_3(self):
         html = '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=ISO-8859-2"> charset="iso-fake-29" ľščťžäňôě'
