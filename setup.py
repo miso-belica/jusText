@@ -13,8 +13,6 @@ try:
 except ImportError:
     from distutils.core import setup
 
-import justext
-
 
 with open("README.rst") as readme:
     with open("CHANGELOG.rst") as changelog:
@@ -26,7 +24,7 @@ with open("LICENSE.rst") as file:
 
 setup(
     name="jusText",
-    version=justext.__version__,
+    version="1.2.0",
     description="Heuristic based boilerplate removal tool",
     long_description=long_description,
     author="Michal Belica",
