@@ -19,7 +19,7 @@ import lxml.sax
 
 from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
-from ._compat import unicode
+from ._compat import unicode, ignored
 
 
 MAX_LINK_DENSITY_DEFAULT = 0.2
@@ -89,11 +89,9 @@ def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
     match = CHARSET_META_TAG_PATTERN.search(html_string)
     if match:
         declared_encoding = match.group(1).decode("ASCII")
-        try:
+        # proceed unknown encoding as if it wasn't found at all
+        with ignored(LookupError):
             return html_string.decode(declared_encoding, errors)
-        except LookupError:
-            # unknown encoding - proceed as if it wasn't found at all
-            pass
 
     # unknown encoding
     try:

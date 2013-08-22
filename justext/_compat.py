@@ -24,3 +24,16 @@ try:
 except ImportError:
     import urllib.request as urllib
     from urllib.error import URLError
+
+
+try:
+	from contextlib import ignored
+except ImportError:
+	from contextlib import contextmanager
+
+	@contextmanager
+	def ignored(*exceptions):
+		try:
+			yield
+		except tuple(exceptions):
+			pass
