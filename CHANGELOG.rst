@@ -6,7 +6,7 @@ Changelog for jusText
 - *INCOMPATIBLE CHANGE:* Paragraphs are instances of
   ``justext.paragraph.Paragraph``.
 - *INCOMPATIBLE CHANGE:* Script 'justext' removed in favour of
-  command `python -m justext`.
+  command ``python -m justext``.
 - *FEATURE:* It's possible to enter an URI as input document in CLI.
 - *FEATURE:* It is possible to pass unicode string directly.
 
