@@ -108,3 +108,20 @@ class TestHtmlEncoding(unittest.TestCase):
             default_encoding="iso-8859-2")
 
         self.assert_strings_equal(html, decoded_html)
+
+    def test_given_encoding(self):
+        html = 'ľščťžäňôě'
+        decoded_html = decode_html(html.encode("iso-8859-2"), encoding="iso-8859-2")
+
+        self.assert_strings_equal(html, decoded_html)
+
+    def test_given_wrong_encoding(self):
+        html = 'ľščťžäňôě'
+        decoded_html = decode_html(html.encode("iso-8859-2"), encoding="ASCII")
+
+        self.assert_strings_equal("\ufffd" * len(html), decoded_html)
+
+    def test_fake_encoding_in_meta(self):
+        html = '<meta charset="iso-fake-2"/> ľščťžäňôě'
+
+        tools.assert_raises(JustextError, decode_html, html.encode("iso-8859-2"))
