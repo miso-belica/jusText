@@ -30,7 +30,17 @@ on Google Code. Below are some "forks" that I found:
 
 Installation
 ------------
-Make sure you have Python_ 2.6+/3.2+ installed.
+Make sure you have Python_ 2.6+/3.2+ and `pip <https://crate.io/packages/pip/>`_
+(`Windows <http://docs.python-guide.org/en/latest/starting/install/win/>`_,
+`Linux <http://docs.python-guide.org/en/latest/starting/install/linux/>`_) installed.
+Run simply (preferred way):
+
+.. code-block:: bash
+
+  $ [sudo] pip install git+git://github.com/miso-belica/jusText.git
+
+
+Or if you have to:
 
 .. code-block:: bash
 
@@ -38,13 +48,6 @@ Make sure you have Python_ 2.6+/3.2+ installed.
   $ unzip master.zip # extract the downloaded file
   $ jusText-master/
   $ [sudo] python setup.py install # install the package
-
-
-Or simply:
-
-.. code-block:: bash
-
-  $ [sudo] pip install git+git://github.com/miso-belica/jusText.git
 
 
 Dependencies
