@@ -14,11 +14,14 @@ linguistic resources such as Web corpora. You can
 `try it online <http://nlp.fi.muni.cz/projects/justext/>`_.
 
 This is a fork of original (currently unmaintained) code of jusText_ hosted
-on Google Code. Below are some "forks" that I found:
+on Google Code. Below are some alternatives that I found:
 
 - http://code.google.com/p/boilerpipe/
 - http://sourceforge.net/projects/webascorpus/?source=navbar
 - https://github.com/jiminoc/goose
+- https://github.com/grangier/python-goose
+- https://github.com/miso-belica/readability.py
+- https://github.com/dcramer/decruft
 
 - https://github.com/JalfResi/justext
 - https://github.com/andreypopp/extracty/tree/master/justext
