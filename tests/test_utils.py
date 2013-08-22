@@ -6,8 +6,7 @@ from __future__ import division, print_function, unicode_literals
 import unittest
 
 from nose import tools
-from justext.paragraph import normalize_whitespace
-from justext.core import is_blank, get_stoplists, get_stoplist
+from justext.utils import is_blank, normalize_whitespace, get_stoplists, get_stoplist
 
 
 class TestStringUtils(unittest.TestCase):

@@ -9,16 +9,14 @@ This software is licensed as described in the file LICENSE.rst.
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
-import os
 import re
-import sys
-import pkgutil
 import lxml.html
 import lxml.sax
 
 from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
 from ._compat import unicode, ignored
+from .utils import is_blank, get_stoplist, get_stoplists
 
 
 MAX_LINK_DENSITY_DEFAULT = 0.2
@@ -46,31 +44,6 @@ class JustextError(Exception):
 
 class JustextInvalidOptions(JustextError):
     pass
-
-
-def get_stoplists():
-    """Returns a collection of built-in stop-lists."""
-    path_to_stoplists = os.path.dirname(sys.modules["justext"].__file__)
-    path_to_stoplists = os.path.join(path_to_stoplists, "stoplists")
-
-    stoplist_names = []
-    for filename in os.listdir(path_to_stoplists):
-        name, extension = os.path.splitext(filename)
-        if extension == ".txt":
-            stoplist_names.append(name)
-
-    return tuple(stoplist_names)
-
-
-def get_stoplist(language):
-    """Returns an built-in stop-list for the language as a set of words."""
-    file_path = os.path.join("stoplists", "%s.txt" % language)
-    try:
-        stopwords = pkgutil.get_data("justext", file_path)
-    except IOError:
-        raise ValueError("Stoplist for language %s is missing. Please use function 'get_stoplists' for complete list of stoplists and feel free to contribute by your own stoplist." % language)
-
-    return frozenset(w.decode("utf8") for w in stopwords.splitlines())
 
 
 def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
@@ -102,14 +75,6 @@ def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
             return html_string.decode(default_encoding)
         except UnicodeDecodeError as e:
             raise JustextError("Unable to decode the HTML to Unicode: " + unicode(e))
-
-
-def is_blank(string):
-    """
-    Returns `True` if string contains only white-space characters
-    or is empty. Otherwise `False` is returned.
-    """
-    return not bool(string.lstrip())
 
 
 def remove_comments(root):

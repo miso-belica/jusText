@@ -5,11 +5,7 @@ from __future__ import division, print_function, unicode_literals
 
 import re
 
-
-MULTIPLE_WHITESPACE_PATTERN = re.compile(r"\s+", re.UNICODE)
-def normalize_whitespace(string):
-    """Translates multiple white-space into single space."""
-    return MULTIPLE_WHITESPACE_PATTERN.sub(" ", string)
+from .utils import normalize_whitespace
 
 
 class Paragraph(object):
