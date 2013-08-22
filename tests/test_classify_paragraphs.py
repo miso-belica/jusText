@@ -5,6 +5,7 @@ from __future__ import division, print_function, unicode_literals
 
 import unittest
 
+from nose import tools
 from justext.core import classify_paragraphs
 from justext.paragraph import Paragraph
 
@@ -32,11 +33,11 @@ class TestClassifyParagraphs(unittest.TestCase):
 
         classify_paragraphs(paragraphs, (), max_link_density=0.5)
 
-        self.assertEqual(paragraphs[0].cf_class, "short")
-        self.assertEqual(paragraphs[1].cf_class, "bad")
-        self.assertEqual(paragraphs[2].cf_class, "bad")
-        self.assertEqual(paragraphs[3].cf_class, "bad")
-        self.assertEqual(paragraphs[4].cf_class, "bad")
+        tools.assert_equal(paragraphs[0].cf_class, "short")
+        tools.assert_equal(paragraphs[1].cf_class, "bad")
+        tools.assert_equal(paragraphs[2].cf_class, "bad")
+        tools.assert_equal(paragraphs[3].cf_class, "bad")
+        tools.assert_equal(paragraphs[4].cf_class, "bad")
 
     def test_length_low(self):
         paragraphs = [
@@ -46,8 +47,8 @@ class TestClassifyParagraphs(unittest.TestCase):
 
         classify_paragraphs(paragraphs, (), max_link_density=1, length_low=1000)
 
-        self.assertEqual(paragraphs[0].cf_class, "short")
-        self.assertEqual(paragraphs[1].cf_class, "bad")
+        tools.assert_equal(paragraphs[0].cf_class, "short")
+        tools.assert_equal(paragraphs[1].cf_class, "bad")
 
     def test_stopwords_high(self):
         paragraphs = [
@@ -58,8 +59,8 @@ class TestClassifyParagraphs(unittest.TestCase):
         classify_paragraphs(paragraphs, ("0",), max_link_density=1, length_low=0,
             stopwords_high=0, length_high=20)
 
-        self.assertEqual(paragraphs[0].cf_class, "neargood")
-        self.assertEqual(paragraphs[1].cf_class, "good")
+        tools.assert_equal(paragraphs[0].cf_class, "neargood")
+        tools.assert_equal(paragraphs[1].cf_class, "good")
 
     def test_stopwords_low(self):
         paragraphs = [
@@ -71,6 +72,6 @@ class TestClassifyParagraphs(unittest.TestCase):
         classify_paragraphs(paragraphs, ("0", "1",), max_link_density=1,
             length_low=0, stopwords_high=1000, stopwords_low=0.2)
 
-        self.assertEqual(paragraphs[0].cf_class, "neargood")
-        self.assertEqual(paragraphs[1].cf_class, "neargood")
-        self.assertEqual(paragraphs[2].cf_class, "bad")
+        tools.assert_equal(paragraphs[0].cf_class, "neargood")
+        tools.assert_equal(paragraphs[1].cf_class, "neargood")
+        tools.assert_equal(paragraphs[2].cf_class, "bad")

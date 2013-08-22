@@ -5,6 +5,7 @@ from __future__ import division, print_function, unicode_literals
 
 import unittest
 
+from nose import tools
 from lxml import html
 from justext.core import remove_comments, remove_tags
 
@@ -21,13 +22,13 @@ class TestDomUtils(unittest.TestCase):
 
         expected = '<html><!-- comment --><body><h1>Header</h1><!-- comment --> text<p>footer</p></body></html>'
         returned = html.tostring(dom).decode("utf8")
-        self.assertEqual(expected, returned)
+        tools.assert_equal(expected, returned)
 
         remove_comments(dom)
 
         expected = '<html><body><h1>Header</h1> text<p>footer</p></body></html>'
         returned = html.tostring(dom).decode("utf8")
-        self.assertEqual(expected, returned)
+        tools.assert_equal(expected, returned)
 
     def test_remove_tags_1(self):
         html_string = (
@@ -40,7 +41,7 @@ class TestDomUtils(unittest.TestCase):
 
         dom = html.fromstring(html_string)
         returned = html.tostring(dom).decode("utf8")
-        self.assertEqual(html_string, returned)
+        tools.assert_equal(html_string, returned)
 
         remove_tags(dom, "head", "em")
         returned = html.tostring(dom).decode("utf8")
@@ -51,7 +52,7 @@ class TestDomUtils(unittest.TestCase):
             '<p>footer  a boss</p>'
             '</body></html>'
         )
-        self.assertEqual(expected, returned)
+        tools.assert_equal(expected, returned)
 
     def test_remove_tags_2(self):
         html_string = (
@@ -64,7 +65,7 @@ class TestDomUtils(unittest.TestCase):
 
         dom = html.fromstring(html_string)
         returned = html.tostring(dom).decode("utf8")
-        self.assertEqual(html_string, returned)
+        tools.assert_equal(html_string, returned)
 
         remove_tags(dom, "span")
         returned = html.tostring(dom).decode("utf8")
@@ -75,7 +76,7 @@ class TestDomUtils(unittest.TestCase):
             '<p>footer <em>like</em> a boss</p>'
             '</body></html>'
         )
-        self.assertEqual(expected, returned)
+        tools.assert_equal(expected, returned)
 
     def test_remove_tags_3(self):
         html_string = (
@@ -88,7 +89,7 @@ class TestDomUtils(unittest.TestCase):
 
         dom = html.fromstring(html_string)
         returned = html.tostring(dom).decode("utf8")
-        self.assertEqual(html_string, returned)
+        tools.assert_equal(html_string, returned)
 
         remove_tags(dom, "em")
         returned = html.tostring(dom).decode("utf8")
@@ -99,4 +100,4 @@ class TestDomUtils(unittest.TestCase):
             '<p>footer  a boss</p>'
             '</body></html>'
         )
-        self.assertEqual(expected, returned)
+        tools.assert_equal(expected, returned)
