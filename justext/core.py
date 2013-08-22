@@ -13,7 +13,6 @@ import os
 import re
 import sys
 import pkgutil
-import lxml.etree
 import lxml.html
 import lxml.sax
 
