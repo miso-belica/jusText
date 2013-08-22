@@ -7,10 +7,10 @@ import unittest
 
 from nose import tools
 from justext.paragraph import normalize_whitespace
-from justext.core import is_blank
+from justext.core import is_blank, get_stoplists, get_stoplist
 
 
-class TestUtils(unittest.TestCase):
+class TestStringUtils(unittest.TestCase):
     def test_empty_string_is_blank(self):
         tools.assert_true(is_blank(""))
 
@@ -56,3 +56,38 @@ class TestUtils(unittest.TestCase):
         string = "\u00A0\t €\u202F \t"
         expected = " € "
         tools.assert_equal(expected, normalize_whitespace(string))
+
+
+class TestStoplistsUtils(unittest.TestCase):
+    def test_get_stopwords_list(self):
+        stopwords = list(sorted(get_stoplists()))
+
+        tools.assert_equal(stopwords, list(sorted([
+            "Afrikaans", "Albanian", "Arabic", "Aragonese", "Armenian",
+            "Aromanian", "Asturian", "Azerbaijani", "Basque", "Belarusian",
+            "Belarusian_Taraskievica", "Bengali", "Bishnupriya_Manipuri",
+            "Bosnian", "Breton", "Bulgarian", "Catalan", "Cebuano", "Croatian",
+            "Czech", "Danish", "Dutch", "English", "Esperanto", "Estonian",
+            "Finnish", "French", "Galician", "Georgian", "German", "Greek",
+            "Gujarati", "Haitian", "Hebrew", "Hindi", "Hungarian", "Chuvash",
+            "Icelandic", "Ido", "Igbo", "Indonesian", "Irish", "Italian",
+            "Javanese", "Kannada", "Kazakh", "Korean", "Kurdish", "Kyrgyz",
+            "Latin", "Latvian", "Lithuanian", "Lombard", "Low_Saxon",
+            "Luxembourgish", "Macedonian", "Malay", "Malayalam", "Maltese",
+            "Marathi", "Neapolitan", "Nepali", "Newar", "Norwegian_Bokmal",
+            "Norwegian_Nynorsk", "Occitan", "Persian", "Piedmontese", "Polish",
+            "Portuguese", "Quechua", "Romanian", "Russian", "Samogitian",
+            "Serbian", "Serbo_Croatian", "Sicilian", "Simple_English", "Slovak",
+            "Slovenian", "Spanish", "Sundanese", "Swahili", "Swedish",
+            "Tagalog", "Tamil", "Telugu", "Turkish", "Turkmen", "Ukrainian",
+            "Urdu", "Uzbek", "Vietnamese", "Volapuk", "Walloon", "Waray_Waray",
+            "Welsh", "West_Frisian", "Western_Panjabi", "Yoruba",
+        ])))
+
+    def test_get_real_stoplist(self):
+        stopwords = get_stoplist("Slovak")
+
+        tools.assert_true(len(stopwords) > 0)
+
+    def test_get_missing_stoplist(self):
+        tools.assert_raises(ValueError, get_stoplist, "Klingon")
