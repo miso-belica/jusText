@@ -253,6 +253,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         else:
             paragraph.cf_class = 'bad'
 
+
 def _get_neighbour(i, paragraphs, ignore_neargood, inc, boundary):
     while i + inc != boundary:
         i += inc
@@ -263,6 +264,7 @@ def _get_neighbour(i, paragraphs, ignore_neargood, inc, boundary):
             return c
     return 'bad'
 
+
 def get_prev_neighbour(i, paragraphs, ignore_neargood):
     """
     Return the class of the paragraph at the top end of the short/neargood
@@ -271,6 +273,7 @@ def get_prev_neighbour(i, paragraphs, ignore_neargood):
     """
     return _get_neighbour(i, paragraphs, ignore_neargood, -1, -1)
 
+
 def get_next_neighbour(i, paragraphs, ignore_neargood):
     """
     Return the class of the paragraph at the bottom end of the short/neargood
@@ -278,6 +281,7 @@ def get_next_neighbour(i, paragraphs, ignore_neargood):
     can be returned, otherwise 'neargood' can be returned, too.
     """
     return _get_neighbour(i, paragraphs, ignore_neargood, 1, len(paragraphs))
+
 
 def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT):
     """
@@ -346,6 +350,7 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
                 break
             distance += len(paragraphs[j].text)
             j += 1
+
 
 def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
