@@ -34,7 +34,7 @@ def get_stoplists():
         if extension == ".txt":
             stoplist_names.append(name)
 
-    return tuple(stoplist_names)
+    return frozenset(stoplist_names)
 
 
 def get_stoplist(language):

@@ -59,9 +59,9 @@ class TestStringUtils(unittest.TestCase):
 
 class TestStoplistsUtils(unittest.TestCase):
     def test_get_stopwords_list(self):
-        stopwords = list(sorted(get_stoplists()))
+        stopwords = get_stoplists()
 
-        tools.assert_equal(stopwords, list(sorted([
+        tools.assert_equal(stopwords, frozenset((
             "Afrikaans", "Albanian", "Arabic", "Aragonese", "Armenian",
             "Aromanian", "Asturian", "Azerbaijani", "Basque", "Belarusian",
             "Belarusian_Taraskievica", "Bengali", "Bishnupriya_Manipuri",
@@ -81,7 +81,7 @@ class TestStoplistsUtils(unittest.TestCase):
             "Tagalog", "Tamil", "Telugu", "Turkish", "Turkmen", "Ukrainian",
             "Urdu", "Uzbek", "Vietnamese", "Volapuk", "Walloon", "Waray_Waray",
             "Welsh", "West_Frisian", "Western_Panjabi", "Yoruba",
-        ])))
+        )))
 
     def test_get_real_stoplist(self):
         stopwords = get_stoplist("Slovak")
