@@ -46,35 +46,64 @@ class JustextInvalidOptions(JustextError):
     pass
 
 
-def decode_html(html_string, encoding=None, default_encoding=DEFAULT_ENCODING,
-        errors=DEFAULT_ENC_ERRORS):
+def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
+    """Converts HTML to DOM."""
+    if isinstance(html, unicode):
+        decoded_html = html
+        # encode HTML for case it's XML with encoding declaration
+        forced_encoding = encoding if encoding else default_encoding
+        html = html.encode(forced_encoding, errors)
+    else:
+        decoded_html = decode_html(html, default_encoding, encoding, errors)
+
+    try:
+        dom = lxml.html.fromstring(decoded_html)
+    except ValueError:
+        # Unicode strings with encoding declaration are not supported.
+        # for XHTML files with encoding declaration, use the declared encoding
+        dom = lxml.html.fromstring(html)
+
+    return dom
+
+
+def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """
-    Converts a `html_string` containing an HTML page into Unicode.
+    Converts a `html` containing an HTML page into Unicode.
     Tries to guess character encoding from meta tag.
     """
-    if isinstance(html_string, unicode):
-        return html_string
+    if isinstance(html, unicode):
+        return html
 
     if encoding:
-        return html_string.decode(encoding, errors)
+        return html.decode(encoding, errors)
 
-    match = CHARSET_META_TAG_PATTERN.search(html_string)
+    match = CHARSET_META_TAG_PATTERN.search(html)
     if match:
         declared_encoding = match.group(1).decode("ASCII")
         # proceed unknown encoding as if it wasn't found at all
         with ignored(LookupError):
-            return html_string.decode(declared_encoding, errors)
+            return html.decode(declared_encoding, errors)
 
     # unknown encoding
     try:
         # try UTF-8 first
-        return html_string.decode("utf8")
+        return html.decode("utf8")
     except UnicodeDecodeError:
         # try lucky with default encoding
         try:
-            return html_string.decode(default_encoding)
+            return html.decode(default_encoding)
         except UnicodeDecodeError as e:
             raise JustextError("Unable to decode the HTML to Unicode: " + unicode(e))
+
+
+def preprocess(dom):
+    "Removes unwanted parts of DOM."
+
+    # clean DOM from useless tags
+    remove_comments(dom)
+    remove_tags(dom, "head", "script", "style")
+
+    return dom
 
 
 def remove_comments(root):
@@ -94,30 +123,6 @@ def remove_tags(root, *tags):
     # start with inner most nodes
     for node in reversed(useless_tags):
         node.drop_tree()
-
-
-def preprocess(html_text, encoding=None, default_encoding=DEFAULT_ENCODING,
-        enc_errors=DEFAULT_ENC_ERRORS):
-    "Converts HTML to DOM and removes unwanted parts."
-    if isinstance(html_text, unicode):
-        decoded_html = html_text
-        # encode HTML for case it's XML with encoding declaration
-        encoding_type = encoding if encoding else default_encoding
-        html_text = html_text.encode(encoding_type, enc_errors)
-    else:
-        decoded_html = decode_html(html_text, encoding, default_encoding, enc_errors)
-
-    try:
-        root = lxml.html.fromstring(decoded_html)
-    except ValueError: # Unicode strings with encoding declaration are not supported.
-        # for XHTML files with encoding declaration, use the declared encoding
-        root = lxml.html.fromstring(html_text)
-
-    # clean DOM from useless tags
-    remove_comments(root)
-    remove_tags(root, "head", "script", "style")
-
-    return root
 
 
 class ParagraphMaker(ContentHandler):
@@ -357,10 +362,13 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     dom_path:
       A dom path to the paragraph in the original HTML page.
     """
-    root = preprocess(html_text, encoding=encoding,
-        default_encoding=default_encoding, enc_errors=enc_errors)
-    paragraphs = ParagraphMaker.make_paragraphs(root)
+    dom = html_to_dom(html_text, default_encoding, encoding, enc_errors)
+    dom = preprocess(dom)
+
+    paragraphs = ParagraphMaker.make_paragraphs(dom)
+
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
         stopwords_low, stopwords_high, max_link_density, no_headings)
     revise_paragraph_classification(paragraphs, max_heading_distance)
+
     return paragraphs

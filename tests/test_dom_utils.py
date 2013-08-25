@@ -7,7 +7,7 @@ import unittest
 
 from nose import tools
 from lxml import html
-from justext.core import preprocess, remove_comments, remove_tags
+from justext.core import preprocess, html_to_dom, remove_comments, remove_tags
 
 
 class TestDomUtils(unittest.TestCase):
@@ -111,7 +111,7 @@ class TestDomUtils(unittest.TestCase):
             '</body></html>'
         )
 
-        dom = preprocess(html_string)
+        dom = preprocess(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><body>'
@@ -132,7 +132,7 @@ class TestDomUtils(unittest.TestCase):
             b'</body></html>'
         )
 
-        dom = preprocess(html_string)
+        dom = preprocess(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><body>'
@@ -159,7 +159,7 @@ class TestDomUtils(unittest.TestCase):
             '</html>'
         )
 
-        dom = preprocess(html_string)
+        dom = preprocess(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sk" lang="sk">'
@@ -184,7 +184,7 @@ class TestDomUtils(unittest.TestCase):
             b'</html>'
         )
 
-        dom = preprocess(html_string)
+        dom = preprocess(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sk" lang="sk">'
