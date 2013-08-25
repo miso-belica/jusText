@@ -104,8 +104,7 @@ class TestHtmlEncoding(unittest.TestCase):
 
     def test_default_encoding(self):
         html = 'ľščťžäňôě'
-        decoded_html = decode_html(html.encode("iso-8859-2"),
-            default_encoding="iso-8859-2")
+        decoded_html = decode_html(html.encode("iso-8859-2"), default_encoding="iso-8859-2")
 
         self.assert_strings_equal(html, decoded_html)
 
