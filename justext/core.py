@@ -322,7 +322,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT, no_headings=NO_HEADINGS_DEFAULT,
         encoding=None, default_encoding=DEFAULT_ENCODING,
-        enc_errors=DEFAULT_ENC_ERRORS):
+        enc_errors=DEFAULT_ENC_ERRORS, preprocess=preprocessor):
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as a dictionary with the following attributes:
@@ -357,9 +357,13 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
 
     dom_path:
       A dom path to the paragraph in the original HTML page.
+
+    preprocess:
+      A callable object with one argument (lxml's DOM instance) that returns
+      modified DOM structure suitable for classification.
     """
     dom = html_to_dom(html_text, default_encoding, encoding, enc_errors)
-    dom = preprocessor(dom)
+    dom = preprocess(dom)
 
     paragraphs = ParagraphMaker.make_paragraphs(dom)
 

@@ -2,6 +2,7 @@
 
 Changelog for jusText
 =====================
+- *FEATURE:* Added pluggable DOM preprocessor.
 - *FEATURE:* Added support for Python 3.2+.
 - *INCOMPATIBLE CHANGE:* Paragraphs are instances of
   ``justext.paragraph.Paragraph``.
