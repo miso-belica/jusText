@@ -13,6 +13,7 @@ import re
 import lxml.html
 import lxml.sax
 
+from lxml.html.clean import Cleaner
 from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
 from ._compat import unicode, ignored
@@ -96,33 +97,28 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
             raise JustextError("Unable to decode the HTML to Unicode: " + unicode(e))
 
 
-def preprocess(dom):
+def preprocessor(dom):
     "Removes unwanted parts of DOM."
+    options = {
+        "processing_instructions": False,
+        "remove_unknown_tags": False,
+        "safe_attrs_only": False,
+        "page_structure": False,
+        "annoying_tags": False,
+        "frames": False,
+        "meta": False,
+        "links": False,
+        "javascript": False,
+        "scripts": True,
+        "comments": True,
+        "style": True,
+        "embedded": True,
+        "forms": True,
+        "kill_tags": ("head",),
+    }
+    cleaner = Cleaner(**options)
 
-    # clean DOM from useless tags
-    remove_comments(dom)
-    remove_tags(dom, "head", "script", "style")
-
-    return dom
-
-
-def remove_comments(root):
-    "Removes comment nodes."
-    comments = []
-    for node in root.iter():
-        if isinstance(node, lxml.html.HtmlComment):
-            comments.append(node)
-
-    # start with inner most nodes
-    for comment in reversed(comments):
-        comment.drop_tree()
-
-
-def remove_tags(root, *tags):
-    useless_tags = tuple(n for n in root.iter() if n.tag in tags)
-    # start with inner most nodes
-    for node in reversed(useless_tags):
-        node.drop_tree()
+    return cleaner.clean_html(dom)
 
 
 class ParagraphMaker(ContentHandler):
@@ -363,7 +359,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
       A dom path to the paragraph in the original HTML page.
     """
     dom = html_to_dom(html_text, default_encoding, encoding, enc_errors)
-    dom = preprocess(dom)
+    dom = preprocessor(dom)
 
     paragraphs = ParagraphMaker.make_paragraphs(dom)
 

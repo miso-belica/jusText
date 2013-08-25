@@ -7,7 +7,7 @@ import unittest
 
 from nose import tools
 from lxml import html
-from justext.core import preprocess, html_to_dom, remove_comments, remove_tags
+from justext.core import preprocessor, html_to_dom
 
 
 class TestDomUtils(unittest.TestCase):
@@ -24,13 +24,13 @@ class TestDomUtils(unittest.TestCase):
         returned = html.tostring(dom).decode("utf8")
         tools.assert_equal(expected, returned)
 
-        remove_comments(dom)
+        dom = preprocessor(dom)
 
         expected = '<html><body><h1>Header</h1> text<p>footer</p></body></html>'
         returned = html.tostring(dom).decode("utf8")
         tools.assert_equal(expected, returned)
 
-    def test_remove_tags_1(self):
+    def test_remove_head_tag(self):
         html_string = (
             '<html><head><title>Title</title></head><body>'
             '<h1>Header</h1>'
@@ -43,61 +43,13 @@ class TestDomUtils(unittest.TestCase):
         returned = html.tostring(dom).decode("utf8")
         tools.assert_equal(html_string, returned)
 
-        remove_tags(dom, "head", "em")
+        dom = preprocessor(dom)
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><body>'
             '<h1>Header</h1>'
             '<p><span>text</span></p>'
-            '<p>footer  a boss</p>'
-            '</body></html>'
-        )
-        tools.assert_equal(expected, returned)
-
-    def test_remove_tags_2(self):
-        html_string = (
-            '<html><head><title>Title</title></head><body>'
-            '<h1>Header</h1>'
-            '<p>pre<span>text</span>post<em>emph</em>popost</p>'
             '<p>footer <em>like</em> a boss</p>'
-            '</body></html>'
-        )
-
-        dom = html.fromstring(html_string)
-        returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(html_string, returned)
-
-        remove_tags(dom, "span")
-        returned = html.tostring(dom).decode("utf8")
-        expected = (
-            '<html><head><title>Title</title></head><body>'
-            '<h1>Header</h1>'
-            '<p>prepost<em>emph</em>popost</p>'
-            '<p>footer <em>like</em> a boss</p>'
-            '</body></html>'
-        )
-        tools.assert_equal(expected, returned)
-
-    def test_remove_tags_3(self):
-        html_string = (
-            '<html><head><title>Title</title></head><body>'
-            '<h1>Header</h1>'
-            '<p>pre<span>text</span>post<em>emph</em>popost</p>'
-            '<p>footer <em>like</em> a boss</p>'
-            '</body></html>'
-        )
-
-        dom = html.fromstring(html_string)
-        returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(html_string, returned)
-
-        remove_tags(dom, "em")
-        returned = html.tostring(dom).decode("utf8")
-        expected = (
-            '<html><head><title>Title</title></head><body>'
-            '<h1>Header</h1>'
-            '<p>pre<span>text</span>postpopost</p>'
-            '<p>footer  a boss</p>'
             '</body></html>'
         )
         tools.assert_equal(expected, returned)
@@ -111,7 +63,7 @@ class TestDomUtils(unittest.TestCase):
             '</body></html>'
         )
 
-        dom = preprocess(html_to_dom(html_string))
+        dom = preprocessor(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><body>'
@@ -132,7 +84,7 @@ class TestDomUtils(unittest.TestCase):
             b'</body></html>'
         )
 
-        dom = preprocess(html_to_dom(html_string))
+        dom = preprocessor(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html><body>'
@@ -159,7 +111,7 @@ class TestDomUtils(unittest.TestCase):
             '</html>'
         )
 
-        dom = preprocess(html_to_dom(html_string))
+        dom = preprocessor(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sk" lang="sk">'
@@ -184,7 +136,7 @@ class TestDomUtils(unittest.TestCase):
             b'</html>'
         )
 
-        dom = preprocess(html_to_dom(html_string))
+        dom = preprocessor(html_to_dom(html_string))
         returned = html.tostring(dom).decode("utf8")
         expected = (
             '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sk" lang="sk">'
