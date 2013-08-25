@@ -325,42 +325,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
         enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor):
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
-    is represented as a dictionary with the following attributes:
-
-    text:
-      Plain text content.
-
-    cfclass:
-      The context-free class -- class assigned by the context-free
-      classification: 'good', 'bad', 'neargood' or 'short'.
-
-    class:
-      The final class: 'good' or 'bad'.
-
-    heading:
-      Set to True of the paragraph contains a heading, False otherwise.
-
-    word_count:
-      Number of words.
-
-    linked_char_count:
-      Number of characters inside links.
-
-    link_density:
-      linked_char_count / len(text)
-
-    stopword_count:
-      Number of stop-words in stop-list.
-
-    stopword_density:
-      stopword_count / word_count
-
-    dom_path:
-      A dom path to the paragraph in the original HTML page.
-
-    preprocessor:
-      A callable object with one argument (lxml's DOM instance) that returns
-      modified DOM structure suitable for classification.
+    is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
     """
     dom = html_to_dom(html_text, default_encoding, encoding, enc_errors)
     dom = preprocessor(dom)
