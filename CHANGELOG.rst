@@ -2,6 +2,9 @@
 
 Changelog for jusText
 =====================
+
+2.0.0 (2013-08-26)
+------------------
 - *FEATURE:* Added pluggable DOM preprocessor.
 - *FEATURE:* Added support for Python 3.2+.
 - *INCOMPATIBLE CHANGE:* Paragraphs are instances of
@@ -11,8 +14,8 @@ Changelog for jusText
 - *FEATURE:* It's possible to enter an URI as input document in CLI.
 - *FEATURE:* It is possible to pass unicode string directly.
 
-1.2 (2011-08-08)
------------------
+1.2.0 (2011-08-08)
+------------------
 - *FEATURE:* Character counts used instead of word counts where possible in
   order to make the algorithm work well in the language independent
   mode (without a stoplist) for languages where counting words is
@@ -21,6 +24,6 @@ Changelog for jusText
   used charset.
 - *BUG FIX:* Corrected decoding of HTML entities &#128; to &#159;
 
-1.1 (2011-03-09)
-----------------
+1.1.0 (2011-03-09)
+------------------
 - First public release.
