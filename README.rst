@@ -40,6 +40,13 @@ Run simply (preferred way):
 
 .. code-block:: bash
 
+  $ [sudo] pip install justext
+
+
+Or for the fresh version:
+
+.. code-block:: bash
+
   $ [sudo] pip install git+git://github.com/miso-belica/jusText.git
 
 
