@@ -8,7 +8,7 @@ before_install:
   - sudo apt-get install libxml2-dev libxslt-dev
 # command to install dependencies
 install:
-  - pip install -r dev_requirements.txt --use-mirrors
   - python setup.py install
+  - pip install -r dev_requirements.txt --use-mirrors
 # command to run tests
 script: nosetests tests
