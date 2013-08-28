@@ -8,9 +8,10 @@ jusText
   :target: https://travis-ci.org/miso-belica/jusText
 
 Program jusText is a tool for removing boilerplate content, such as navigation
-links, headers, and footers from HTML pages. It is designed to preserve mainly
-text containing full sentences and it is therefore well suited for creating
-linguistic resources such as Web corpora. You can
+links, headers, and footers from HTML pages. It is
+`designed <https://code.google.com/p/justext/wiki/Algorithm>`_ to preserve
+mainly text containing full sentences and it is therefore well suited for
+creating linguistic resources such as Web corpora. You can
 `try it online <http://nlp.fi.muni.cz/projects/justext/>`_.
 
 This is a fork of original (currently unmaintained) code of jusText_ hosted
@@ -107,6 +108,6 @@ Acknowledgements
 .. _`Lexical Computing Ltd.`: http://lexicalcomputing.com/
 .. _`PhD research`: http://is.muni.cz/th/45523/fi_d/phdthesis.pdf
 
-This software is developed at the `Natural Language Processing Centre`_ of
+This software has been developed at the `Natural Language Processing Centre`_ of
 `Masaryk University in Brno`_ with a financial support from PRESEMT_ and
 `Lexical Computing Ltd.`_ It also relates to `PhD research`_ of Jan Pomikálek.
