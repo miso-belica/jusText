@@ -191,7 +191,7 @@ def main():
                                 "Can't open %s for reading: %s" % (a, e))
                         except UnicodeDecodeError as e:
                             raise JustextInvalidOptions(
-                                "Unicode decoding error when reading " \
+                                "Unicode decoding error when reading "
                                 "the stoplist (probably not in UTF-8): %s" % e)
                     elif a in get_stoplists():
                         stoplist = get_stoplist(a)

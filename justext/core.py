@@ -40,8 +40,10 @@ DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""",
     re.IGNORECASE)
 
+
 class JustextError(Exception):
     "Base class for jusText exceptions."
+
 
 class JustextInvalidOptions(JustextError):
     pass
