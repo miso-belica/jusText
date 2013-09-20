@@ -27,8 +27,10 @@ setup(
     version="2.0.0",
     description="Heuristic based boilerplate removal tool",
     long_description=long_description,
-    author="Michal Belica",
-    author_email="miso.belica@gmail.com",
+    author="Jan Pomikálek",
+    author_email="jan.pomikalek@gmail.com",
+    maintainer="Michal Belica",
+    maintainer_email="miso.belica@gmail.com",
     url="https://github.com/miso-belica/jusText",
     license=license,
     install_requires=[
