@@ -23,6 +23,7 @@ on Google Code. Below are some alternatives that I found:
 - https://github.com/grangier/python-goose
 - https://github.com/miso-belica/readability.py
 - https://github.com/dcramer/decruft
+- https://github.com/FeiSun/ContentExtraction
 
 - https://github.com/JalfResi/justext
 - https://github.com/andreypopp/extracty/tree/master/justext
