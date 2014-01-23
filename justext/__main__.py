@@ -100,9 +100,9 @@ def output_detailed(paragraphs, fp=sys.stdout):
     attributes are added: class, cfclass and heading.
     """
     for paragraph in paragraphs:
-        print('<p class="%s" cfclass="%s" heading="%i"> %s' % (
-            paragraph.class_type, paragraph.cf_class,
-            int(paragraph.heading), cgi.escape(paragraph.text)), file=fp)
+        print('<p class="%s" cfclass="%s" heading="%i" xpath="%s"> %s' % (
+            paragraph.class_type, paragraph.cf_class, int(paragraph.heading),
+            paragraph.xpath, cgi.escape(paragraph.text)), file=fp)
 
 
 def output_krdwrd(paragraphs, fp=sys.stdout):

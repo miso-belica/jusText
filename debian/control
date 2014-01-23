@@ -1,0 +1,17 @@
+Source: justext
+Maintainer: Misja Hoebe <misja.hoebe@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 0.6.37-1), python-all (>= 2.7.5-5), debhelper (>= 7)
+Standards-Version: 3.9.1
+Vcs-Browser: https://github.com/miso-belica/jusText
+Vcs-Git: https://github.com/miso-belica/jusText.git
+
+Package: python-justext
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Python module for removing boilerplate content.
+ jusText is a package created by Jan Pomikálek for removing boilerplate content
+ such as navigation links, headers, and footers from HTML pages. It is designed
+ to preserve mainly text containing full sentences and it is therefore well 
+ suited for creating linguistic resources such as Web corpora.

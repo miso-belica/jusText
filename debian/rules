@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python2 --buildsystem=python_distutils
+
+override_dh_auto_clean:
+	rm -rf jusText.egg-info
+	dh_auto_clean

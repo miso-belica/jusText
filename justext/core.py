@@ -122,7 +122,21 @@ def preprocessor(dom):
 
     return cleaner.clean_html(dom)
 
+class XPathPart(object):
 
+    def __init__(self, name, idx):
+        self.name = name
+        self.idx = idx
+        self.children = {}
+
+    def next(self, name):
+        if name in self.children:
+            idx = self.children[name] + 1
+        else:
+            idx = 1
+        self.children[name] = idx
+        return XPathPart(name, idx)
+ 
 class ParagraphMaker(ContentHandler):
     """
     A class for converting a HTML page represented as a DOM object into a list
@@ -138,6 +152,7 @@ class ParagraphMaker(ContentHandler):
 
     def __init__(self):
         self.dom = []
+        self.xpath = []
         self.paragraphs = []
         self.paragraph = None
         self.link = False
@@ -148,11 +163,16 @@ class ParagraphMaker(ContentHandler):
         if self.paragraph and self.paragraph.contains_text():
             self.paragraphs.append(self.paragraph)
 
-        self.paragraph = Paragraph(self.dom)
+        self.paragraph = Paragraph(self.dom, self.xpath)
 
     def startElementNS(self, name, qname, attrs):
         name = name[1]
         self.dom.append(name)
+        if self.xpath:
+            self.xpath.append(self.xpath[-1].next(name))
+        else:
+            self.xpath.append(XPathPart(name, 1))
+        
         if name in PARAGRAPH_TAGS or (name == "br" and self.br):
             if name == "br":
                 # the <br><br> is a paragraph separator and should
@@ -169,6 +189,7 @@ class ParagraphMaker(ContentHandler):
     def endElementNS(self, name, qname):
         name = name[1]
         self.dom.pop()
+        self.xpath.pop()
         if name in PARAGRAPH_TAGS:
             self._start_new_pragraph()
         if name == 'a':
