@@ -86,11 +86,11 @@ def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
                 tag = 'h'
             else:
                 tag = 'p'
+        elif no_boilerplate:
+            continue
         else:
-            if no_boilerplate:
-                continue
-            else:
-                tag = 'b'
+            tag = 'b'
+
         print('<%s> %s' % (tag, cgi.escape(paragraph.text)), file=fp)
 
 
