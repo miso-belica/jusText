@@ -98,7 +98,7 @@ Run tests via
 
 .. code-block:: bash
 
-  $ nosetests tests
+  $ nosetests-2.6 && nosetests-3.2 && nosetests-2.7 && nosetests-3.3
 
 
 Acknowledgements
