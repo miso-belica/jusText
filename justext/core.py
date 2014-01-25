@@ -137,7 +137,7 @@ class ParagraphMaker(ContentHandler):
         return handler.paragraphs
 
     def __init__(self):
-        self.dom = []
+        self.path = PathInfo()
         self.paragraphs = []
         self.paragraph = None
         self.link = False
@@ -148,11 +148,12 @@ class ParagraphMaker(ContentHandler):
         if self.paragraph and self.paragraph.contains_text():
             self.paragraphs.append(self.paragraph)
 
-        self.paragraph = Paragraph(self.dom)
+        self.paragraph = Paragraph(self.path)
 
     def startElementNS(self, name, qname, attrs):
         name = name[1]
-        self.dom.append(name)
+        self.path.append(name)
+
         if name in PARAGRAPH_TAGS or (name == "br" and self.br):
             if name == "br":
                 # the <br><br> is a paragraph separator and should
@@ -168,7 +169,8 @@ class ParagraphMaker(ContentHandler):
 
     def endElementNS(self, name, qname):
         name = name[1]
-        self.dom.pop()
+        self.path.pop()
+
         if name in PARAGRAPH_TAGS:
             self._start_new_pragraph()
         if name == 'a':
@@ -186,6 +188,40 @@ class ParagraphMaker(ContentHandler):
         if self.link:
             self.paragraph.chars_count_in_links += len(text)
         self.br = False
+
+
+class PathInfo(object):
+    def __init__(self):
+        # list of triples (tag name, order, children)
+        self._elements = []
+
+    @property
+    def dom(self):
+        return ".".join(e[0] for e in self._elements)
+
+    @property
+    def xpath(self):
+        return "/" + "/".join("%s[%d]" % e[:2] for e in self._elements)
+
+    def append(self, tag_name):
+        children = self._get_children()
+        order = children.get(tag_name, 0) + 1
+        children[tag_name] = order
+
+        xpath_part = (tag_name, order, {})
+        self._elements.append(xpath_part)
+
+        return self
+
+    def _get_children(self):
+        if not self._elements:
+            return {}
+
+        return self._elements[-1][2]
+
+    def pop(self):
+        self._elements.pop()
+        return self
 
 
 def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,

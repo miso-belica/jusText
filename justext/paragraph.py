@@ -10,8 +10,9 @@ from .utils import normalize_whitespace
 
 class Paragraph(object):
     """Object representing one block of text in HTML."""
-    def __init__(self, dom_path):
-        self.dom_path = ".".join(dom_path)
+    def __init__(self, path):
+        self.dom_path = path.dom
+        self.xpath = path.xpath
         self.text_nodes = []
         self.chars_count_in_links = 0
         self.tags_count = 0

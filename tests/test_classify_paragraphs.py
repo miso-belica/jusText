@@ -6,13 +6,14 @@ from __future__ import division, print_function, unicode_literals
 import unittest
 
 from nose import tools
-from justext.core import classify_paragraphs
+from justext.core import PathInfo, classify_paragraphs
 from justext.paragraph import Paragraph
 
 
 class TestClassifyParagraphs(unittest.TestCase):
     def _paragraph(self, **kwargs):
-        paragraph = Paragraph(("body", "p",))
+        path = PathInfo().append("body").append("p")
+        paragraph = Paragraph(path)
 
         for n, v in kwargs.items():
             if n == "text":
