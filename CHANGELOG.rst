@@ -3,6 +3,10 @@
 Changelog for jusText
 =====================
 
+2.1.0 (2014-01-25)
+------------------
+- *FEATURE:* Added XPath selector to the paragrahs. XPath selector is also available in detailed output as ``xpath`` attribute of ``<p>`` tag `#5 <https://github.com/miso-belica/jusText/pull/5>`_.
+
 2.0.0 (2013-08-26)
 ------------------
 - *FEATURE:* Added pluggable DOM preprocessor.

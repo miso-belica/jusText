@@ -24,7 +24,7 @@ with open("LICENSE.rst") as file:
 
 setup(
     name="jusText",
-    version="2.0.0",
+    version="2.1.0",
     description="Heuristic based boilerplate removal tool",
     long_description=long_description,
     author="Jan Pomikálek",
