@@ -123,6 +123,7 @@ def output_krdwrd(paragraphs, fp=sys.stdout):
                 cls = 3
         else:
             cls = 1
+
         for text_node in paragraph.text_nodes:
             print('%i\t%s' % (cls, text_node.strip()), file=fp)
 
