@@ -49,4 +49,4 @@ def get_stoplist(language):
             "and feel free to contribute by your own stoplist." % language
         )
 
-    return frozenset(w.decode("utf8") for w in stopwords.splitlines())
+    return frozenset(w.decode("utf8").lower() for w in stopwords.splitlines())

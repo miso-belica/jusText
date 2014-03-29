@@ -49,7 +49,7 @@ class Paragraph(object):
         count = 0
 
         for word in self.text.split():
-            if word in stopwords:
+            if word.lower() in stopwords:
                 count += 1
 
         return count

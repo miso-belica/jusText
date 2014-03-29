@@ -229,6 +229,8 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         no_headings=NO_HEADINGS_DEFAULT):
     "Context-free paragraph classification."
+
+    stoplist = frozenset(w.lower() for w in stoplist)
     for paragraph in paragraphs:
         length = len(paragraph)
         stopword_density = paragraph.stopwords_density(stoplist)
