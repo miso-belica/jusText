@@ -43,6 +43,10 @@ def get_stoplist(language):
     try:
         stopwords = pkgutil.get_data("justext", file_path)
     except IOError:
-        raise ValueError("Stoplist for language %s is missing. Please use function 'get_stoplists' for complete list of stoplists and feel free to contribute by your own stoplist." % language)
+        raise ValueError(
+            "Stoplist for language '%s' is missing. "
+            "Please use function 'get_stoplists' for complete list of stoplists "
+            "and feel free to contribute by your own stoplist." % language
+        )
 
     return frozenset(w.decode("utf8") for w in stopwords.splitlines())
