@@ -62,8 +62,8 @@ class Paragraph(object):
         return self.stopwords_count(stopwords) / words_count
 
     def links_density(self):
-        text_lenght = len(self.text)
-        if text_lenght == 0:
+        text_length = len(self.text)
+        if text_length == 0:
             return 0
 
-        return self.chars_count_in_links / text_lenght
+        return self.chars_count_in_links / text_length
