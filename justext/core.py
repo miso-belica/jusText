@@ -94,7 +94,7 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     except UnicodeDecodeError:
         # try lucky with default encoding
         try:
-            return html.decode(default_encoding)
+            return html.decode(default_encoding, errors)
         except UnicodeDecodeError as e:
             raise JustextError("Unable to decode the HTML to Unicode: " + unicode(e))
 

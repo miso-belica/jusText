@@ -98,9 +98,14 @@ class TestHtmlEncoding(unittest.TestCase):
 
         self.assert_strings_equal(html, decoded_html)
 
-    def test_unknown_encoding(self):
+    def test_unknown_encoding_in_strict_mode(self):
         html = 'ľščťžäňôě'
-        tools.assert_raises(JustextError, decode_html, html.encode("iso-8859-2"))
+        tools.assert_raises(JustextError, decode_html, html.encode("iso-8859-2"), errors='strict')
+
+    def test_unknown_encoding_with_default_error_handler(self):
+        html = 'ľščťžäňôě'
+        decoded = decode_html(html.encode("iso-8859-2"), default_encoding="iso-8859-2")
+        self.assertEqual(decoded, html)
 
     def test_default_encoding(self):
         html = 'ľščťžäňôě'
@@ -123,4 +128,4 @@ class TestHtmlEncoding(unittest.TestCase):
     def test_fake_encoding_in_meta(self):
         html = '<meta charset="iso-fake-2"/> ľščťžäňôě'
 
-        tools.assert_raises(JustextError, decode_html, html.encode("iso-8859-2"))
+        tools.assert_raises(JustextError, decode_html, html.encode("iso-8859-2"), errors='strict')
