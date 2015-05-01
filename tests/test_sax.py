@@ -116,7 +116,7 @@ class TestSax(unittest.TestCase):
         tools.assert_equal(len(paragraphs), 5)
 
         self.assert_paragraphs_equal(paragraphs[0], words_count=7, tags_count=2,
-            text="I am top-inline and I am happy")
+            text="I am top-inline\nand I am happy")
 
         self.assert_paragraphs_equal(paragraphs[1], words_count=2, tags_count=0,
             text="normal text")
@@ -128,7 +128,7 @@ class TestSax(unittest.TestCase):
             text="after text with variable N")
 
         self.assert_paragraphs_equal(paragraphs[4], words_count=7, tags_count=0,
-            text="I am inline and I am happy")
+            text="I am inline\nand I am happy")
 
     def test_links(self):
         """Inline text should be treated as separate paragraph."""
@@ -147,7 +147,7 @@ class TestSax(unittest.TestCase):
         tools.assert_equal(len(paragraphs), 5)
 
         self.assert_paragraphs_equal(paragraphs[0], words_count=7, tags_count=2,
-            text="I am top-inline and I am happy", chars_count_in_links=31)
+            text="I am top-inline\nand I am happy", chars_count_in_links=31)
 
         self.assert_paragraphs_equal(paragraphs[1], words_count=2, tags_count=0,
             text="normal text")
@@ -159,4 +159,4 @@ class TestSax(unittest.TestCase):
             text="after text with variable N", chars_count_in_links=4)
 
         self.assert_paragraphs_equal(paragraphs[4], words_count=7, tags_count=0,
-            text="I am inline and I am happy")
+            text="I am inline\nand I am happy")
