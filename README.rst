@@ -17,11 +17,11 @@ creating linguistic resources such as Web corpora. You can
 This is a fork of original (currently unmaintained) code of jusText_ hosted
 on Google Code. Below are some alternatives that I found:
 
+- https://github.com/bookieio/breadability
 - http://code.google.com/p/boilerpipe/
 - http://sourceforge.net/projects/webascorpus/?source=navbar
 - https://github.com/jiminoc/goose
 - https://github.com/grangier/python-goose
-- https://github.com/miso-belica/readability.py
 - https://github.com/dcramer/decruft
 - https://github.com/FeiSun/ContentExtraction
 
