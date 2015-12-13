@@ -4,11 +4,13 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
+  - "3.4"
+  - "3.5"
 before_install:
   - sudo apt-get install libxml2-dev libxslt-dev
 # command to install dependencies
 install:
   - python setup.py install
-  - pip install nose coverage --use-mirrors
+  - pip install nose 'coverage<4.0.0'
 # command to run tests
 script: nosetests tests
