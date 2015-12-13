@@ -35,7 +35,7 @@ on Google Code. Below are some alternatives that I found:
 
 Installation
 ------------
-Make sure you have Python_ 2.6+/3.2+ and `pip <https://crate.io/packages/pip/>`_
+Make sure you have Python_ 2.6+/3.3+ and `pip <https://crate.io/packages/pip/>`_
 (`Windows <http://docs.python-guide.org/en/latest/starting/install/win/>`_,
 `Linux <http://docs.python-guide.org/en/latest/starting/install/linux/>`_) installed.
 Run simply (preferred way):
@@ -98,7 +98,7 @@ Run tests via
 
 .. code-block:: bash
 
-  $ nosetests-2.6 && nosetests-3.2 && nosetests-2.7 && nosetests-3.3
+  $ nosetests-2.6 && nosetests-3.3 && nosetests-2.7 && nosetests-3.4 && nosetests-3.5
 
 
 Acknowledgements

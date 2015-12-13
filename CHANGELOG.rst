@@ -6,6 +6,7 @@ Changelog for jusText
 2.?.? (2014-??-??)
 ------------------
 - *INCOMPATIBLE CHANGE:* Stop words are case insensitive.
+- *INCOMPATIBLE CHANGE:* Dropped support for Python 3.2
 
 2.1.1 (2014-05-27)
 ------------------
