@@ -37,8 +37,7 @@ PARAGRAPH_TAGS = [
 ]
 DEFAULT_ENCODING = 'utf8'
 DEFAULT_ENC_ERRORS = 'replace'
-CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""",
-    re.IGNORECASE)
+CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""", re.IGNORECASE)
 
 
 class JustextError(Exception):
@@ -60,11 +59,11 @@ def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
         decoded_html = decode_html(html, default_encoding, encoding, errors)
 
     try:
-        dom = lxml.html.fromstring(decoded_html)
+        dom = lxml.html.fromstring(decoded_html, parser=lxml.html.HTMLParser())
     except ValueError:
         # Unicode strings with encoding declaration are not supported.
         # for XHTML files with encoding declaration, use the declared encoding
-        dom = lxml.html.fromstring(html)
+        dom = lxml.html.fromstring(html, parser=lxml.html.HTMLParser())
 
     return dom
 

@@ -4,6 +4,8 @@ from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
 import unittest
+import lxml.etree
+import pytest
 
 from lxml import html
 from justext.core import preprocessor, html_to_dom
@@ -145,3 +147,14 @@ class TestDomUtils(unittest.TestCase):
             '</html>'
         )
         assert expected == returned
+
+    def test_lxml_do_not_hold_context_from_previous_parsing(self):
+        """
+        https://github.com/miso-belica/jusText/issues/17
+        """
+        html_to_dom("<justext></justext>")
+
+        with pytest.raises(lxml.etree.XMLSyntaxError) as e:
+            html_to_dom("")
+
+        assert "justext" not in str(e.value)
