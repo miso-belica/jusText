@@ -38,28 +38,11 @@ Installation
 Make sure you have Python_ 2.6+/3.3+ and `pip <https://crate.io/packages/pip/>`_
 (`Windows <http://docs.python-guide.org/en/latest/starting/install/win/>`_,
 `Linux <http://docs.python-guide.org/en/latest/starting/install/linux/>`_) installed.
-Run simply (preferred way):
+Run simply:
 
 .. code-block:: bash
 
   $ [sudo] pip install justext
-
-
-Or for the fresh version:
-
-.. code-block:: bash
-
-  $ [sudo] pip install git+git://github.com/miso-belica/jusText.git
-
-
-Or if you have to:
-
-.. code-block:: bash
-
-  $ wget https://github.com/miso-belica/jusText/archive/master.zip # download the sources
-  $ unzip master.zip # extract the downloaded file
-  $ jusText-master/
-  $ [sudo] python setup.py install # install the package
 
 
 Dependencies
@@ -98,7 +81,7 @@ Run tests via
 
 .. code-block:: bash
 
-  $ nosetests-2.6 && nosetests-3.3 && nosetests-2.7 && nosetests-3.4 && nosetests-3.5
+  $ py.test-2.6 && py.test-3.3 && py.test-2.7 && py.test-3.4 && py.test-3.5
 
 
 Acknowledgements

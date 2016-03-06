@@ -4,15 +4,16 @@ from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
 import unittest
+import pytest
 
-from nose import tools
 from justext.core import JustextError, decode_html
 
 
 class TestHtmlEncoding(unittest.TestCase):
-    def assert_strings_equal(self, s1, s2, *args):
-        tools.assert_equal(type(s1), type(s2), *args)
-        tools.assert_equal(s1, s2, *args)
+
+    def assert_strings_equal(self, s1, s2):
+        assert type(s1) == type(s2)
+        assert s1 == s2
 
     def test_unicode(self):
         html = "ľščťžýáíéäňúô Ł€"
@@ -100,7 +101,8 @@ class TestHtmlEncoding(unittest.TestCase):
 
     def test_unknown_encoding_in_strict_mode(self):
         html = 'ľščťžäňôě'
-        tools.assert_raises(JustextError, decode_html, html.encode("iso-8859-2"), errors='strict')
+        with pytest.raises(JustextError):
+            decode_html(html.encode("iso-8859-2"), errors='strict')
 
     def test_unknown_encoding_with_default_error_handler(self):
         html = 'ľščťžäňôě'
@@ -128,4 +130,5 @@ class TestHtmlEncoding(unittest.TestCase):
     def test_fake_encoding_in_meta(self):
         html = '<meta charset="iso-fake-2"/> ľščťžäňôě'
 
-        tools.assert_raises(JustextError, decode_html, html.encode("iso-8859-2"), errors='strict')
+        with pytest.raises(JustextError):
+            decode_html(html.encode("iso-8859-2"), errors='strict')
