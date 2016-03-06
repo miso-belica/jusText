@@ -5,12 +5,12 @@ from __future__ import division, print_function, unicode_literals
 
 import unittest
 
-from nose import tools
 from justext.core import PathInfo, classify_paragraphs
 from justext.paragraph import Paragraph
 
 
 class TestClassifyParagraphs(unittest.TestCase):
+
     def _paragraph(self, **kwargs):
         path = PathInfo().append("body").append("p")
         paragraph = Paragraph(path)
@@ -34,11 +34,11 @@ class TestClassifyParagraphs(unittest.TestCase):
 
         classify_paragraphs(paragraphs, (), max_link_density=0.5)
 
-        tools.assert_equal(paragraphs[0].cf_class, "short")
-        tools.assert_equal(paragraphs[1].cf_class, "bad")
-        tools.assert_equal(paragraphs[2].cf_class, "bad")
-        tools.assert_equal(paragraphs[3].cf_class, "bad")
-        tools.assert_equal(paragraphs[4].cf_class, "bad")
+        assert paragraphs[0].cf_class == "short"
+        assert paragraphs[1].cf_class == "bad"
+        assert paragraphs[2].cf_class == "bad"
+        assert paragraphs[3].cf_class == "bad"
+        assert paragraphs[4].cf_class == "bad"
 
     def test_length_low(self):
         paragraphs = [
@@ -48,8 +48,8 @@ class TestClassifyParagraphs(unittest.TestCase):
 
         classify_paragraphs(paragraphs, (), max_link_density=1, length_low=1000)
 
-        tools.assert_equal(paragraphs[0].cf_class, "short")
-        tools.assert_equal(paragraphs[1].cf_class, "bad")
+        assert paragraphs[0].cf_class == "short"
+        assert paragraphs[1].cf_class == "bad"
 
     def test_stopwords_high(self):
         paragraphs = [
@@ -57,11 +57,17 @@ class TestClassifyParagraphs(unittest.TestCase):
             self._paragraph(text="0 1 2 3 4 5 6 7 8 9"*2),
         ]
 
-        classify_paragraphs(paragraphs, ("0",), max_link_density=1, length_low=0,
-            stopwords_high=0, length_high=20)
+        classify_paragraphs(
+            paragraphs,
+            ("0",),
+            max_link_density=1,
+            length_low=0,
+            stopwords_high=0,
+            length_high=20
+        )
 
-        tools.assert_equal(paragraphs[0].cf_class, "neargood")
-        tools.assert_equal(paragraphs[1].cf_class, "good")
+        assert paragraphs[0].cf_class == "neargood"
+        assert paragraphs[1].cf_class == "good"
 
     def test_stopwords_low(self):
         paragraphs = [
@@ -70,9 +76,15 @@ class TestClassifyParagraphs(unittest.TestCase):
             self._paragraph(text="1 2 3 4 5 6 7 8 9"),
         ]
 
-        classify_paragraphs(paragraphs, ("0", "1",), max_link_density=1,
-            length_low=0, stopwords_high=1000, stopwords_low=0.2)
+        classify_paragraphs(
+            paragraphs,
+            ("0", "1",),
+            max_link_density=1,
+            length_low=0,
+            stopwords_high=1000,
+            stopwords_low=0.2
+        )
 
-        tools.assert_equal(paragraphs[0].cf_class, "neargood")
-        tools.assert_equal(paragraphs[1].cf_class, "neargood")
-        tools.assert_equal(paragraphs[2].cf_class, "bad")
+        assert paragraphs[0].cf_class == "neargood"
+        assert paragraphs[1].cf_class == "neargood"
+        assert paragraphs[2].cf_class == "bad"

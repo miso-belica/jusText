@@ -5,12 +5,12 @@ from __future__ import division, print_function, unicode_literals
 
 import unittest
 
-from nose import tools
 from lxml import html
 from justext.core import preprocessor, html_to_dom
 
 
 class TestDomUtils(unittest.TestCase):
+
     def test_remove_comments(self):
         dom = html.fromstring(
             '<html><!-- comment --><body>'
@@ -22,13 +22,13 @@ class TestDomUtils(unittest.TestCase):
 
         expected = '<html><!-- comment --><body><h1>Header</h1><!-- comment --> text<p>footer</p></body></html>'
         returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(expected, returned)
+        assert expected == returned
 
         dom = preprocessor(dom)
 
         expected = '<html><body><h1>Header</h1> text<p>footer</p></body></html>'
         returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(expected, returned)
+        assert expected == returned
 
     def test_remove_head_tag(self):
         html_string = (
@@ -41,7 +41,7 @@ class TestDomUtils(unittest.TestCase):
 
         dom = html.fromstring(html_string)
         returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(html_string, returned)
+        assert html_string == returned
 
         dom = preprocessor(dom)
         returned = html.tostring(dom).decode("utf8")
@@ -52,7 +52,7 @@ class TestDomUtils(unittest.TestCase):
             '<p>footer <em>like</em> a boss</p>'
             '</body></html>'
         )
-        tools.assert_equal(expected, returned)
+        assert expected == returned
 
     def test_preprocess_simple_unicode_string(self):
         html_string = (
@@ -72,7 +72,7 @@ class TestDomUtils(unittest.TestCase):
             '<p>footer <em>like</em> a boss</p>'
             '</body></html>'
         )
-        tools.assert_equal(expected, returned)
+        assert expected == returned
 
     def test_preprocess_simple_bytes_string(self):
         html_string = (
@@ -94,7 +94,7 @@ class TestDomUtils(unittest.TestCase):
             '  \n'
             '</body></html>'
         )
-        tools.assert_equal(expected, returned)
+        assert expected == returned
 
     def test_preprocess_simple_unicode_xhtml_string_with_declaration(self):
         html_string = (
@@ -119,7 +119,7 @@ class TestDomUtils(unittest.TestCase):
             '</body>'
             '</html>'
         )
-        tools.assert_equal(expected, returned)
+        assert expected == returned
 
     def test_preprocess_simple_bytes_xhtml_string_with_declaration(self):
         html_string = (
@@ -144,4 +144,4 @@ class TestDomUtils(unittest.TestCase):
             '</body>'
             '</html>'
         )
-        tools.assert_equal(expected, returned)
+        assert expected == returned

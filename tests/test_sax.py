@@ -5,27 +5,27 @@ from __future__ import division, print_function, unicode_literals
 
 import unittest
 
-from nose import tools
 from lxml import html
 from justext.core import ParagraphMaker
 
 
 class TestSax(unittest.TestCase):
+
     def assert_paragraphs_equal(self, paragraph, **kwargs):
         for name, value in kwargs.items():
             returned_value = getattr(paragraph, name)
             msg = "%s: %r != %r" % (name, value, returned_value)
-            tools.assert_equal(value, returned_value, msg)
+            assert value == returned_value, msg
 
     def test_no_paragraphs(self):
         html_string = '<html><body></body></html>'
         dom = html.fromstring(html_string)
 
         returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(html_string, returned)
+        assert html_string == returned
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
-        tools.assert_equal(len(paragraphs), 0)
+        assert len(paragraphs) == 0
 
     def test_basic(self):
         html_string = (
@@ -38,10 +38,10 @@ class TestSax(unittest.TestCase):
         dom = html.fromstring(html_string)
 
         returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(html_string, returned)
+        assert html_string == returned
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
-        tools.assert_equal(len(paragraphs), 3)
+        assert len(paragraphs) == 3
 
         self.assert_paragraphs_equal(paragraphs[0], text="Header", words_count=1, tags_count=0)
 
@@ -62,22 +62,35 @@ class TestSax(unittest.TestCase):
         dom = html.fromstring(html_string)
 
         returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(html_string, returned)
+        assert html_string == returned
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
-        tools.assert_equal(len(paragraphs), 4)
+        assert len(paragraphs) == 4
 
-        self.assert_paragraphs_equal(paragraphs[0], text="preinpost pre in post",
-            words_count=4, tags_count=2)
-
-        self.assert_paragraphs_equal(paragraphs[1], text="pre in post",
-            words_count=3, tags_count=1)
-
-        self.assert_paragraphs_equal(paragraphs[2], text="prein post",
-            words_count=2, tags_count=1)
-
-        self.assert_paragraphs_equal(paragraphs[3], text="pre inpost",
-            words_count=2, tags_count=1)
+        self.assert_paragraphs_equal(
+            paragraphs[0],
+            text="preinpost pre in post",
+            words_count=4,
+            tags_count=2
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[1],
+            text="pre in post",
+            words_count=3,
+            tags_count=1
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[2],
+            text="prein post",
+            words_count=2,
+            tags_count=1
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[3],
+            text="pre inpost",
+            words_count=2,
+            tags_count=1
+        )
 
     def test_multiple_line_break(self):
         html_string = (
@@ -88,16 +101,23 @@ class TestSax(unittest.TestCase):
         dom = html.fromstring(html_string)
 
         returned = html.tostring(dom).decode("utf8")
-        tools.assert_equal(html_string, returned)
+        assert html_string == returned
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
-        tools.assert_equal(len(paragraphs), 2)
+        assert len(paragraphs) == 2
 
-        self.assert_paragraphs_equal(paragraphs[0], text="normal text",
-            words_count=2, tags_count=0)
-
-        self.assert_paragraphs_equal(paragraphs[1], text="another text",
-            words_count=2, tags_count=0)
+        self.assert_paragraphs_equal(
+            paragraphs[0],
+            text="normal text",
+            words_count=2,
+            tags_count=0
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[1],
+            text="another text",
+            words_count=2,
+            tags_count=0
+        )
 
     def test_inline_text_in_body(self):
         """Inline text should be treated as separate paragraph."""
@@ -113,22 +133,38 @@ class TestSax(unittest.TestCase):
         dom = html.fromstring(html_string)
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
-        tools.assert_equal(len(paragraphs), 5)
+        assert len(paragraphs) == 5
 
-        self.assert_paragraphs_equal(paragraphs[0], words_count=7, tags_count=2,
-            text="I am top-inline\nand I am happy")
-
-        self.assert_paragraphs_equal(paragraphs[1], words_count=2, tags_count=0,
-            text="normal text")
-
-        self.assert_paragraphs_equal(paragraphs[2], words_count=4, tags_count=1,
-            text="var i = -INFINITY;")
-
-        self.assert_paragraphs_equal(paragraphs[3], words_count=5, tags_count=1,
-            text="after text with variable N")
-
-        self.assert_paragraphs_equal(paragraphs[4], words_count=7, tags_count=0,
-            text="I am inline\nand I am happy")
+        self.assert_paragraphs_equal(
+            paragraphs[0],
+            words_count=7,
+            tags_count=2,
+            text="I am top-inline\nand I am happy"
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[1],
+            words_count=2,
+            tags_count=0,
+            text="normal text"
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[2],
+            words_count=4,
+            tags_count=1,
+            text="var i = -INFINITY;"
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[3],
+            words_count=5,
+            tags_count=1,
+            text="after text with variable N"
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[4],
+            words_count=7,
+            tags_count=0,
+            text="I am inline\nand I am happy"
+        )
 
     def test_links(self):
         """Inline text should be treated as separate paragraph."""
@@ -144,19 +180,37 @@ class TestSax(unittest.TestCase):
         dom = html.fromstring(html_string)
 
         paragraphs = ParagraphMaker.make_paragraphs(dom)
-        tools.assert_equal(len(paragraphs), 5)
+        assert len(paragraphs) == 5
 
-        self.assert_paragraphs_equal(paragraphs[0], words_count=7, tags_count=2,
-            text="I am top-inline\nand I am happy", chars_count_in_links=31)
-
-        self.assert_paragraphs_equal(paragraphs[1], words_count=2, tags_count=0,
-            text="normal text")
-
-        self.assert_paragraphs_equal(paragraphs[2], words_count=4, tags_count=1,
-            text="var i = -INFINITY;")
-
-        self.assert_paragraphs_equal(paragraphs[3], words_count=5, tags_count=2,
-            text="after text with variable N", chars_count_in_links=4)
-
-        self.assert_paragraphs_equal(paragraphs[4], words_count=7, tags_count=0,
-            text="I am inline\nand I am happy")
+        self.assert_paragraphs_equal(
+            paragraphs[0],
+            words_count=7,
+            tags_count=2,
+            text="I am top-inline\nand I am happy",
+            chars_count_in_links=31
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[1],
+            words_count=2,
+            tags_count=0,
+            text="normal text"
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[2],
+            words_count=4,
+            tags_count=1,
+            text="var i = -INFINITY;"
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[3],
+            words_count=5,
+            tags_count=2,
+            text="after text with variable N",
+            chars_count_in_links=4
+        )
+        self.assert_paragraphs_equal(
+            paragraphs[4],
+            words_count=7,
+            tags_count=0,
+            text="I am inline\nand I am happy"
+        )

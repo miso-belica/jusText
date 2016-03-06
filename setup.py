@@ -34,10 +34,10 @@ setup(
         "lxml>=2.2.4",
     ],
     tests_require=[
-        "nose",
+        "pytest",
+        "pytest-cov",
         "coverage",
     ],
-    test_suite="nose.collector",
     packages=["justext"],
     package_data={"justext": ["stoplists/*.txt"]},
     classifiers=(

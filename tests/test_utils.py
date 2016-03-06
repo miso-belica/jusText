@@ -4,64 +4,66 @@ from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
 import unittest
+import pytest
 
-from nose import tools
 from justext.utils import is_blank, normalize_whitespace, get_stoplists, get_stoplist
 
 
 class TestStringUtils(unittest.TestCase):
+
     def test_empty_string_is_blank(self):
-        tools.assert_true(is_blank(""))
+        assert is_blank("")
 
     def test_string_with_space_is_blank(self):
-        tools.assert_true(is_blank(" "))
+        assert is_blank(" ")
 
     def test_string_with_nobreak_space_is_blank(self):
-        tools.assert_true(is_blank("\u00A0\t "))
+        assert is_blank("\u00A0\t ")
 
     def test_string_with_narrow_nobreak_space_is_blank(self):
-        tools.assert_true(is_blank("\u202F \t"))
+        assert is_blank("\u202F \t")
 
     def test_string_with_spaces_is_blank(self):
-        tools.assert_true(is_blank("    "))
+        assert is_blank("    ")
 
     def test_string_with_newline_is_blank(self):
-        tools.assert_true(is_blank("\n"))
+        assert is_blank("\n")
 
     def test_string_with_tab_is_blank(self):
-        tools.assert_true(is_blank("\t"))
+        assert is_blank("\t")
 
     def test_string_with_whitespace_is_blank(self):
-        tools.assert_true(is_blank("\t\n "))
+        assert is_blank("\t\n ")
 
     def test_string_with_chars_is_not_blank(self):
-        tools.assert_false(is_blank("  #  "))
+        assert not is_blank("  #  ")
 
     def test_normalize_no_change(self):
         string = "a b c d e f g h i j k l m n o p q r s ..."
-        tools.assert_equal(string, normalize_whitespace(string))
+        assert string == normalize_whitespace(string)
 
     def test_normalize_dont_trim(self):
         string = "  a b c d e f g h i j k l m n o p q r s ...  "
         expected = " a b c d e f g h i j k l m n o p q r s ... "
-        tools.assert_equal(expected, normalize_whitespace(string))
+        assert expected == normalize_whitespace(string)
 
     def test_normalize_newline_and_tab(self):
         string = "123 \n456\t\n"
         expected = "123\n456\n"
-        tools.assert_equal(expected, normalize_whitespace(string))
+        assert expected == normalize_whitespace(string)
 
     def test_normalize_non_break_spaces(self):
         string = "\u00A0\t €\u202F \t"
         expected = " € "
-        tools.assert_equal(expected, normalize_whitespace(string))
+        assert expected == normalize_whitespace(string)
 
 
 class TestStoplistsUtils(unittest.TestCase):
+
     def test_get_stopwords_list(self):
         stopwords = get_stoplists()
 
-        tools.assert_equal(stopwords, frozenset((
+        assert stopwords == frozenset((
             "Afrikaans", "Albanian", "Arabic", "Aragonese", "Armenian",
             "Aromanian", "Asturian", "Azerbaijani", "Basque", "Belarusian",
             "Belarusian_Taraskievica", "Bengali", "Bishnupriya_Manipuri",
@@ -81,12 +83,13 @@ class TestStoplistsUtils(unittest.TestCase):
             "Tagalog", "Tamil", "Telugu", "Turkish", "Turkmen", "Ukrainian",
             "Urdu", "Uzbek", "Vietnamese", "Volapuk", "Walloon", "Waray_Waray",
             "Welsh", "West_Frisian", "Western_Panjabi", "Yoruba",
-        )))
+        ))
 
     def test_get_real_stoplist(self):
         stopwords = get_stoplist("Slovak")
 
-        tools.assert_true(len(stopwords) > 0)
+        assert len(stopwords) > 0
 
     def test_get_missing_stoplist(self):
-        tools.assert_raises(ValueError, get_stoplist, "Klingon")
+        with pytest.raises(ValueError):
+            get_stoplist("Klingon")

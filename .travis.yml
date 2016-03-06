@@ -11,6 +11,6 @@ before_install:
 # command to install dependencies
 install:
   - python setup.py install
-  - pip install nose 'coverage<4.0.0'
+  - pip install pytest 'coverage<4.0.0' pytest-cov
 # command to run tests
-script: nosetests tests
+script: py.test
