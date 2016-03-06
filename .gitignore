@@ -5,6 +5,7 @@ __pycache__
 
 # tests
 .coverage
+.cache
 
 # project files
 .idea
