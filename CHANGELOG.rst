@@ -3,10 +3,11 @@
 Changelog for jusText
 =====================
 
-2.?.? (2014-??-??)
+2.2.0 (2016-03-06)
 ------------------
 - *INCOMPATIBLE CHANGE:* Stop words are case insensitive.
 - *INCOMPATIBLE CHANGE:* Dropped support for Python 3.2
+- *BUG FIX:* Preserve new lines from original text in paragraphs.
 
 2.1.1 (2014-05-27)
 ------------------
