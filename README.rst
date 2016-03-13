@@ -18,7 +18,7 @@ This is a fork of original (currently unmaintained) code of jusText_ hosted
 on Google Code. Below are some alternatives that I found:
 
 - https://github.com/bookieio/breadability
-- http://code.google.com/p/boilerpipe/
+- https://github.com/kohlschutter/boilerpipe
 - http://sourceforge.net/projects/webascorpus/?source=navbar
 - https://github.com/jiminoc/goose
 - https://github.com/grangier/python-goose
