@@ -265,9 +265,9 @@ class TestSax(unittest.TestCase):
         html_string = (
             '<html><body>'
             '  <p>c</p>'
-            '  <table>'
-            '     <tr>'
-            '        <th>a</th>'
+            '  <table width="200px">'
+            '     <tr width="200px">'
+            '        <th width="200px">a</th>'
             '        <th>b</th>'
             '     </tr>'
             '     <tr>'

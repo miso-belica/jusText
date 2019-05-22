@@ -158,7 +158,10 @@ class ParagraphMaker(ContentHandler):
     def _start_new_pragraph(self):
         if self.paragraph and self.paragraph.contains_text():
             if self.keep_tables_tags and self.paragraph.dom_path.endswith('table'):
-                self.paragraph.text = ''.join(tostring(self.dom.xpath(self.paragraph.xpath)[0]).decode('utf-8').split())
+                table_element = self.dom.xpath(self.paragraph.xpath)[0]
+                for element in table_element.xpath('//*'):
+                    element.attrib.clear()
+                self.paragraph.text = ''.join(tostring(table_element).decode('utf-8').split())
             self.paragraphs.append(self.paragraph)
 
         self.paragraph = Paragraph(self.path)
