@@ -13,6 +13,7 @@ import re
 import lxml.html
 import lxml.sax
 
+from lxml.etree import tostring
 from lxml.html.clean import Cleaner
 from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
@@ -129,8 +130,15 @@ class ParagraphMaker(ContentHandler):
     """
 
     @classmethod
-    def make_paragraphs(cls, root):
+    def make_paragraphs(cls, root, keep_tables_tags=False):
         """Converts DOM into paragraphs."""
+        cls.dom = root
+        cls.keep_tables_tags = keep_tables_tags
+        cls.paragraph_tags = PARAGRAPH_TAGS
+        if cls.keep_tables_tags:
+            cls.paragraph_tags.remove('tr')
+            cls.paragraph_tags.remove('td')
+            cls.paragraph_tags.remove('th')
         handler = cls()
         lxml.sax.saxify(root, handler)
         return handler.paragraphs
@@ -145,6 +153,8 @@ class ParagraphMaker(ContentHandler):
 
     def _start_new_pragraph(self):
         if self.paragraph and self.paragraph.contains_text():
+            if self.keep_tables_tags and self.paragraph.dom_path.endswith('table'):
+                self.paragraph.text = ''.join(tostring(self.dom.xpath(self.paragraph.xpath)[0]).decode('utf-8').split())
             self.paragraphs.append(self.paragraph)
 
         self.paragraph = Paragraph(self.path)
@@ -153,12 +163,14 @@ class ParagraphMaker(ContentHandler):
         name = name[1]
         self.path.append(name)
 
-        if name in PARAGRAPH_TAGS or (name == "br" and self.br):
+        if name in self.paragraph_tags or (name == "br" and self.br):
             if name == "br":
                 # the <br><br> is a paragraph separator and should
                 # not be included in the number of tags within the
                 # paragraph
                 self.paragraph.tags_count -= 1
+            elif name == 'table':
+                print('table')
             self._start_new_pragraph()
         else:
             self.br = bool(name == "br")
@@ -170,7 +182,7 @@ class ParagraphMaker(ContentHandler):
         name = name[1]
         self.path.pop()
 
-        if name in PARAGRAPH_TAGS:
+        if name in self.paragraph_tags:
             self._start_new_pragraph()
         if name == 'a':
             self.link = False
@@ -361,7 +373,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT, no_headings=NO_HEADINGS_DEFAULT,
         encoding=None, default_encoding=DEFAULT_ENCODING,
-        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor):
+        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor, keep_tables_tags=False):
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
@@ -369,7 +381,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     dom = html_to_dom(html_text, default_encoding, encoding, enc_errors)
     dom = preprocessor(dom)
 
-    paragraphs = ParagraphMaker.make_paragraphs(dom)
+    paragraphs = ParagraphMaker.make_paragraphs(dom, keep_tables_tags=keep_tables_tags)
 
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
         stopwords_low, stopwords_high, max_link_density, no_headings)

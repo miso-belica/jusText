@@ -16,6 +16,7 @@ class Paragraph(object):
         self.text_nodes = []
         self.chars_count_in_links = 0
         self.tags_count = 0
+        self._text = None
 
     @property
     def is_heading(self):
@@ -27,6 +28,8 @@ class Paragraph(object):
 
     @property
     def text(self):
+        if self._text:
+            return self._text
         text = "".join(self.text_nodes)
         return normalize_whitespace(text.strip())
 
@@ -67,3 +70,7 @@ class Paragraph(object):
             return 0
 
         return self.chars_count_in_links / text_length
+
+    @text.setter
+    def text(self, text):
+        self._text = text

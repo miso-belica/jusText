@@ -214,3 +214,95 @@ class TestSax(unittest.TestCase):
             tags_count=0,
             text="I am inline\nand I am happy"
         )
+
+    def test_keep_table(self):
+        html_string = (
+            '<html><body>'
+            '  <p>c</p>'
+            '  <table>'
+            '     <tr>'
+            '        <th>a</th>'
+            '        <th>b</th>'
+            '     </tr>'
+            '     <tr>'
+            '        <td>1</td>'
+            '        <td>2</td>'
+            '     </tr>'
+            '  </table>  '
+            '  <p>d</p>'
+            '</body></html>'
+        )
+        dom = html.fromstring(html_string)
+
+        returned = html.tostring(dom).decode("utf8")
+        assert html_string == returned
+
+        paragraphs = ParagraphMaker.make_paragraphs(dom, keep_tables_tags=True)
+        assert len(paragraphs) == 3
+
+        self.assert_paragraphs_equal(
+            paragraphs[0],
+            text="c",
+            words_count=1,
+            tags_count=0
+        )
+
+        self.assert_paragraphs_equal(
+            paragraphs[1],
+            text="<table><tr><th>a</th><th>b</th></tr><tr><td>1</td><td>2</td></tr></table>",
+            words_count=1,
+            tags_count=6
+        )
+
+        self.assert_paragraphs_equal(
+            paragraphs[2],
+            text="d",
+            words_count=1,
+            tags_count=0
+        )
+
+    def test_do_not_keep_table(self):
+        html_string = (
+            '<html><body>'
+            '  <p>c</p>'
+            '  <table>'
+            '     <tr>'
+            '        <th>a</th>'
+            '        <th>b</th>'
+            '     </tr>'
+            '     <tr>'
+            '        <td>1</td>'
+            '        <td>2</td>'
+            '     </tr>'
+            '  </table>  '
+            '  <p>d</p>'
+            '</body></html>'
+        )
+        dom = html.fromstring(html_string)
+
+        returned = html.tostring(dom).decode("utf8")
+        assert html_string == returned
+
+        paragraphs = ParagraphMaker.make_paragraphs(dom)
+        assert len(paragraphs) == 6
+
+        self.assert_paragraphs_equal(
+            paragraphs[0],
+            text="c",
+            words_count=1,
+            tags_count=0
+        )
+
+        self.assert_paragraphs_equal(
+            paragraphs[1],
+            text="a",
+            words_count=1,
+            tags_count=0
+        )
+
+        self.assert_paragraphs_equal(
+            paragraphs[5],
+            text="d",
+            words_count=1,
+            tags_count=0
+        )
