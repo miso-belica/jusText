@@ -20,7 +20,6 @@ from .paragraph import Paragraph
 from ._compat import unicode, ignored
 from .utils import is_blank, get_stoplist, get_stoplists
 
-
 MAX_LINK_DENSITY_DEFAULT = 0.2
 LENGTH_LOW_DEFAULT = 70
 LENGTH_HIGH_DEFAULT = 200
@@ -161,7 +160,7 @@ class ParagraphMaker(ContentHandler):
                 table_element = self.dom.xpath(self.paragraph.xpath)[0]
                 for element in table_element.xpath('//*'):
                     element.attrib.clear()
-                self.paragraph.text = ''.join(tostring(table_element).decode('utf-8').split())
+                self.paragraph.text = re.sub('\s+(?=<)', '', tostring(table_element).decode('utf-8')).strip()
             self.paragraphs.append(self.paragraph)
 
         self.paragraph = Paragraph(self.path)
@@ -241,9 +240,9 @@ class PathInfo(object):
 
 
 def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
-        length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
-        stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
-        no_headings=NO_HEADINGS_DEFAULT):
+                        length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
+                        stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
+                        no_headings=NO_HEADINGS_DEFAULT):
     "Context-free paragraph classification."
 
     stoplist = frozenset(w.lower() for w in stoplist)
@@ -340,7 +339,7 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
             new_classes[i] = 'bad'
         # it must be set(['good', 'bad'])
         elif (prev_neighbour == 'bad' and get_prev_neighbour(i, paragraphs, ignore_neargood=False) == 'neargood') or \
-             (next_neighbour == 'bad' and get_next_neighbour(i, paragraphs, ignore_neargood=False) == 'neargood'):
+                (next_neighbour == 'bad' and get_next_neighbour(i, paragraphs, ignore_neargood=False) == 'neargood'):
             new_classes[i] = 'good'
         else:
             new_classes[i] = 'bad'
@@ -374,11 +373,11 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
 
 
 def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
-        length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
-        stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
-        max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT, no_headings=NO_HEADINGS_DEFAULT,
-        encoding=None, default_encoding=DEFAULT_ENCODING,
-        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor, keep_tables_tags=False):
+            length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
+            stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
+            max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT, no_headings=NO_HEADINGS_DEFAULT,
+            encoding=None, default_encoding=DEFAULT_ENCODING,
+            enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor, keep_tables_tags=False):
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
@@ -389,7 +388,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     paragraphs = ParagraphMaker.make_paragraphs(dom, keep_tables_tags=keep_tables_tags)
 
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
-        stopwords_low, stopwords_high, max_link_density, no_headings)
+                        stopwords_low, stopwords_high, max_link_density, no_headings)
     revise_paragraph_classification(paragraphs, max_heading_distance)
 
     return paragraphs

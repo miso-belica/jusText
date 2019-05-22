@@ -313,7 +313,7 @@ class TestSax(unittest.TestCase):
             '  <p>c</p>'
             '  <table>'
             '     <tr>'
-            '        <th>a</th>'
+            '        <th>a b</th>'
             '        <th>b</th>'
             '     </tr>'
             '     <tr>'
@@ -342,8 +342,8 @@ class TestSax(unittest.TestCase):
 
         self.assert_paragraphs_equal(
             paragraphs[1],
-            text="<table><tr><th>a</th><th>b</th></tr><tr><td>1</td><td>2</td></tr></table>",
-            words_count=1,
+            text="<table><tr><th>a b</th><th>b</th></tr><tr><td>1</td><td>2</td></tr></table>",
+            words_count=2,
             tags_count=6
         )
 
