@@ -169,8 +169,6 @@ class ParagraphMaker(ContentHandler):
                 # not be included in the number of tags within the
                 # paragraph
                 self.paragraph.tags_count -= 1
-            elif name == 'table':
-                print('table')
             self._start_new_pragraph()
         else:
             self.br = bool(name == "br")
