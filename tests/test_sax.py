@@ -377,7 +377,7 @@ class TestSax(unittest.TestCase):
         assert html_string == returned
 
         paragraphs = ParagraphMaker.make_paragraphs(dom, keep_tables_tags=True)
-        #assert len(paragraphs) == 3
+        assert len(paragraphs) == 3
 
         self.assert_paragraphs_equal(
             paragraphs[0],
@@ -391,6 +391,53 @@ class TestSax(unittest.TestCase):
             text="<table><tr><th><p>a b</p></th><th>b</th></tr><tr><td>1</td><td>2</td></tr></table>",
             words_count=2,
             tags_count=7
+        )
+
+        self.assert_paragraphs_equal(
+            paragraphs[2],
+            text="d",
+            words_count=1,
+            tags_count=0
+        )
+
+    def test_keep_nested_tables(self):
+        html_string = (
+            '<html><body>'
+            '  <p>c</p>'
+            '  <table>'
+            '     <tr>'
+            '        <th><table><th><p>a b</p></th></table></th>'
+            '        <th>b</th>'
+            '     </tr>'
+            '     <tr>'
+            '        <td>1</td>'
+            '        <td>2</td>'
+            '     </tr>'
+            '  </table>  '
+            '  <p>d</p>'
+            '</body></html>'
+        )
+        dom = html.fromstring(html_string)
+
+        returned = html.tostring(dom).decode("utf8")
+        assert html_string == returned
+
+        paragraphs = ParagraphMaker.make_paragraphs(dom, keep_tables_tags=True)
+        assert len(paragraphs) == 3
+
+        self.assert_paragraphs_equal(
+            paragraphs[0],
+            text="c",
+            words_count=1,
+            tags_count=0
+        )
+
+        self.assert_paragraphs_equal(
+            paragraphs[1],
+            text="<table><tr><th><table><th><p>a b</p></th></table>"
+                 "</th><th>b</th></tr><tr><td>1</td><td>2</td></tr></table>",
+            words_count=2,
+            tags_count=8
         )
 
         self.assert_paragraphs_equal(

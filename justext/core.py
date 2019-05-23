@@ -144,6 +144,7 @@ class ParagraphMaker(ContentHandler):
         self.paragraph = None
         self.link = False
         self.br = False
+        self.opened_tables = []
         self._start_new_pragraph()
 
     def _start_new_pragraph(self):
@@ -152,7 +153,7 @@ class ParagraphMaker(ContentHandler):
                 table_element = self.dom.xpath(self.paragraph.xpath)[0]
                 for element in table_element.xpath('//*'):
                     element.attrib.clear()
-                self.paragraph.text = re.sub('\s+(?=<)', '', tostring(table_element).decode('utf-8')).strip()
+                self.paragraph.text = re.sub(r'\s+(?=<)', '', tostring(table_element).decode('utf-8')).strip()
             self.paragraphs.append(self.paragraph)
 
         self.paragraph = Paragraph(self.path)
@@ -169,7 +170,9 @@ class ParagraphMaker(ContentHandler):
                 self.paragraph.tags_count -= 1
             if name == "table" and self.keep_tables_tags:
                 self.paragraph_tags = ["table"]
-            self._start_new_pragraph()
+                self.opened_tables.append(name)
+            if len(self.opened_tables) <= 1:
+                self._start_new_pragraph()
         else:
             self.br = bool(name == "br")
             if name == 'a':
@@ -182,8 +185,12 @@ class ParagraphMaker(ContentHandler):
 
         if name in self.paragraph_tags:
             if name == "table" and self.keep_tables_tags:
-                self.paragraph_tags = PARAGRAPH_TAGS
-            self._start_new_pragraph()
+                self.opened_tables.pop()
+                if len(self.opened_tables) == 0:
+                    self.paragraph_tags = PARAGRAPH_TAGS
+                    self._start_new_pragraph()
+            else:
+                self._start_new_pragraph()
         if name == 'a':
             self.link = False
 
@@ -252,7 +259,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
             paragraph.cf_class = 'bad'
         elif ('\xa9' in paragraph.text) or ('&copy' in paragraph.text):
             paragraph.cf_class = 'bad'
-        elif re.search('^select|\.select', paragraph.dom_path):
+        elif re.search(r'^select|\.select', paragraph.dom_path):
             paragraph.cf_class = 'bad'
         elif length < length_low:
             if paragraph.chars_count_in_links > 0:
