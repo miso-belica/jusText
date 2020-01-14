@@ -157,7 +157,7 @@ def test_lxml_do_not_hold_context_from_previous_parsing():
     """
     html_to_dom("<justext></justext>")
 
-    with pytest.raises(lxml.etree.XMLSyntaxError) as e:
+    with pytest.raises(lxml.etree.ParserError) as e:
         html_to_dom("")
 
     assert "justext" not in str(e.value)
