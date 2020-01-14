@@ -4,12 +4,8 @@ cache: pip
 
 matrix:
   include:
-    - name: "Python 2.6 on Linux"
-      python: 2.6
     - name: "Python 2.7 on Linux"
       python: 2.7
-    - name: "Python 3.2 on Linux"
-      python: 3.2
     - name: "Python 3.4 on Linux"
       python: 3.4
     - name: "Python 3.5 on Linux"
@@ -57,10 +53,10 @@ before_install:
 
 install:
   - python setup.py install
-  # pytest 3.0 dropped support for Python 3.2, pytest 4.6.X works best for older Python versions
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install "pytest<3.0.0"; else pip install "pytest==4.6.9"; fi
-   # pinned dependency for backwards compatibility
+  - pip install "pytest==4.6.9" # pytest 4.6.X works best for older Python versions
+  # TODO: last LXML version compatible with Python 3.4 is 4.3.4
+  # pinned dependency for backwards compatibility
   - pip install 'coverage==4.5.4' pytest-cov
 
 script:
-  - py.test # --cov source of errors
+  - py.test --cov
