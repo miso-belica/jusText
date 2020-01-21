@@ -15,27 +15,39 @@ creating linguistic resources such as Web corpora. You can
 `try it online <http://nlp.fi.muni.cz/projects/justext/>`_.
 
 This is a fork of original (currently unmaintained) code of jusText_ hosted
-on Google Code. Below are some alternatives that I found:
+on Google Code.
 
-- https://github.com/bookieio/breadability
-- https://github.com/kohlschutter/boilerpipe
-- http://sourceforge.net/projects/webascorpus/?source=navbar
-- https://github.com/jiminoc/goose
-- https://github.com/grangier/python-goose
-- https://github.com/dcramer/decruft
-- https://github.com/FeiSun/ContentExtraction
 
-- https://github.com/JalfResi/justext
-- https://github.com/andreypopp/extracty/tree/master/justext
-- https://github.com/dreamindustries/jaws/tree/master/justext
-- https://github.com/says/justext
-- https://github.com/chbrown/justext
-- https://github.com/says/justext-app
+Adaptations of the algorithm to other languages:
+
+- `C++ <https://github.com/endredy/jusText>`_
+- `Go <https://github.com/JalfResi/justext>`_
+- `Java <https://github.com/wizenoze/justext-java>`_
+
+
+Some libraries using jusText:
+
+- `chirp <https://github.com/9b/chirp>`_
+- `lazynlp <https://github.com/chiphuyen/lazynlp>`_
+- `off-topic-memento-toolkit <https://github.com/oduwsdl/off-topic-memento-toolkit>`_
+- `pears <https://github.com/PeARSearch/PeARS-orchard>`_
+- `readability calculator <https://github.com/joaopalotti/readability_calculator>`_
+- `sky <https://github.com/kootenpv/sky>`_
+
+
+Some currently (Jan 2020) maintained alternatives:
+
+- `dragnet <https://github.com/dragnet-org/dragnet>`_
+- `html2text <https://github.com/Alir3z4/html2text>`_
+- `inscriptis <https://github.com/weblyzard/inscriptis>`_
+- `newspaper <https://github.com/codelucas/newspaper>`_
+- `python-readability <https://github.com/buriy/python-readability>`_
+- `trafilatura <https://github.com/adbar/trafilatura>`_
 
 
 Installation
 ------------
-Make sure you have Python_ 2.6+/3.3+ and `pip <https://crate.io/packages/pip/>`_
+Make sure you have Python_ 2.7+/3.4+ and `pip <https://pip.pypa.io/en/stable/>`_
 (`Windows <http://docs.python-guide.org/en/latest/starting/install/win/>`_,
 `Linux <http://docs.python-guide.org/en/latest/starting/install/linux/>`_) installed.
 Run simply:
@@ -49,7 +61,7 @@ Dependencies
 ------------
 ::
 
-  lxml>=2.2.4
+  lxml (version depends on your Python version)
 
 
 Usage
@@ -81,7 +93,7 @@ Run tests via
 
 .. code-block:: bash
 
-  $ py.test-2.6 && py.test-3.3 && py.test-2.7 && py.test-3.4 && py.test-3.5
+  $ py.test-2.7 && py.test-3.4 && py.test-3.5 && py.test-3.6 && py.test-3.7 && py.test-3.8
 
 
 Acknowledgements
