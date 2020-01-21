@@ -53,10 +53,12 @@ before_install:
 
 install:
   - python setup.py install
-  - pip install "pytest==4.6.9" # pytest 4.6.X works best for older Python versions
-  # TODO: last LXML version compatible with Python 3.4 is 4.3.4
   # pinned dependency for backwards compatibility
-  - pip install 'coverage==4.5.4' pytest-cov
+  - pip install "pytest==4.6.9" # pytest 4.6.X works best for older Python versions
+  - pip install -U codecov 'coverage==4.5.4' pytest-cov
 
 script:
-  - py.test --cov
+  - py.test tests/
+
+after_success:
+  - codecov
