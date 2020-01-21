@@ -3,13 +3,11 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
-import unittest
-
 from justext.core import PathInfo, classify_paragraphs
 from justext.paragraph import Paragraph
 
 
-class TestClassifyParagraphs(unittest.TestCase):
+class TestClassifyParagraphs():
 
     def _paragraph(self, **kwargs):
         path = PathInfo().append("body").append("p")

@@ -3,13 +3,11 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
-import unittest
-
 from lxml import html
 from justext.core import ParagraphMaker
 
 
-class TestSax(unittest.TestCase):
+class TestSax():
 
     def assert_paragraphs_equal(self, paragraph, **kwargs):
         for name, value in kwargs.items():

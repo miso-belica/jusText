@@ -3,13 +3,12 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
-import unittest
 import pytest
 
 from justext.utils import is_blank, normalize_whitespace, get_stoplists, get_stoplist
 
 
-class TestStringUtils(unittest.TestCase):
+class TestStringUtils():
 
     def test_empty_string_is_blank(self):
         assert is_blank("")
@@ -58,7 +57,7 @@ class TestStringUtils(unittest.TestCase):
         assert expected == normalize_whitespace(string)
 
 
-class TestStoplistsUtils(unittest.TestCase):
+class TestStoplistsUtils():
 
     def test_get_stopwords_list(self):
         stopwords = get_stoplists()
