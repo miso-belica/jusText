@@ -32,7 +32,7 @@ setup(
     license="The BSD 2-Clause License",
     install_requires=[
         'lxml >= 4.4.2; python_version == "2.7"',
-        'lxml == 4.3.5; python_version == "3.4"',
+        'lxml == 4.6.2; python_version == "3.4"',
         'lxml >= 4.4.2; python_version > "3.4"',
     ],
     tests_require=[
