@@ -37,3 +37,10 @@ except ImportError:
 			yield
 		except tuple(exceptions):
 			pass
+
+
+# note that cgi is depecrated and removed since 3.8
+try:
+    from html import escape
+except ImportError:
+    from cgi import escape

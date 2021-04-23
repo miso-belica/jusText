@@ -6,11 +6,11 @@ from __future__ import division, print_function, unicode_literals
 import re
 import os
 import sys
-import cgi
+
 import codecs
 
 from .core import *
-from ._compat import urllib, URLError
+from ._compat import urllib, URLError, escape, PY3
 
 
 def usage():
@@ -91,7 +91,7 @@ def output_default(paragraphs, fp=sys.stdout, no_boilerplate=True):
         else:
             tag = 'b'
 
-        print('<%s> %s' % (tag, cgi.escape(paragraph.text)), file=fp)
+        print('<%s> %s' % (tag, escape(paragraph.text, quote=False)), file=fp)
 
 
 def output_detailed(paragraphs, fp=sys.stdout):
@@ -105,7 +105,7 @@ def output_detailed(paragraphs, fp=sys.stdout):
             paragraph.cf_class,
             int(paragraph.heading),
             paragraph.xpath,
-            cgi.escape(paragraph.text)
+            escape(paragraph.text, quote=False)
         )
         print(output, file=fp)
 
@@ -150,7 +150,10 @@ def main():
 
     stream_writer = codecs.lookup('utf8')[-1]
     fp_in = sys.stdin
-    fp_out = stream_writer(sys.stdout)
+    if PY3:
+        fp_out = stream_writer(sys.stdout.buffer)
+    else:
+        fp_out = stream_writer(sys.stdout)
     stoplist = None
     format = 'default'
     no_headings = False
