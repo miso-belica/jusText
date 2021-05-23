@@ -8,7 +8,8 @@ This software is licensed as described in the file LICENSE.rst.
 
 from __future__ import absolute_import
 
-from .core import justext, get_stoplists, get_stoplist
+from .utils import get_stoplists, get_stoplist
+from .core import justext
 
 
 __version__ = "2.2.0"
