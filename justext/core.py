@@ -240,7 +240,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
             paragraph.cf_class = 'bad'
         elif ('\xa9' in paragraph.text) or ('&copy' in paragraph.text):
             paragraph.cf_class = 'bad'
-        elif re.search('^select|\.select', paragraph.dom_path):
+        elif re.search(r'^select|\.select', paragraph.dom_path):
             paragraph.cf_class = 'bad'
         elif length < length_low:
             if paragraph.chars_count_in_links > 0:
