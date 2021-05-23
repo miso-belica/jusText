@@ -3,6 +3,9 @@
 Changelog for jusText
 =====================
 
+3.0.0 (2021-05-23)
+- *INCOMPATIBLE CHANGE:* Dropped support for Python 3.4 and below.
+
 2.2.0 (2016-03-06)
 ------------------
 - *INCOMPATIBLE CHANGE:* Stop words are case insensitive.
