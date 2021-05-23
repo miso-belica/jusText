@@ -17,7 +17,7 @@ from lxml.html.clean import Cleaner
 from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
 from ._compat import unicode, ignored
-from .utils import is_blank, get_stoplist, get_stoplists
+from .utils import is_blank
 
 
 MAX_LINK_DENSITY_DEFAULT = 0.2
