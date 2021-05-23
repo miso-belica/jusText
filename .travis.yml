@@ -6,8 +6,6 @@ matrix:
   include:
     - name: "Python 2.7 on Linux"
       python: 2.7
-    - name: "Python 3.4 on Linux"
-      python: 3.4
     - name: "Python 3.5 on Linux"
       python: 3.5
     - name: "Python 3.6 on Linux"

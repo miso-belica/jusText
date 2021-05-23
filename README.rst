@@ -47,7 +47,7 @@ Some currently (Jan 2020) maintained alternatives:
 
 Installation
 ------------
-Make sure you have Python_ 2.7+/3.4+ and `pip <https://pip.pypa.io/en/stable/>`_
+Make sure you have Python_ 2.7+/3.5+ and `pip <https://pip.pypa.io/en/stable/>`_
 (`Windows <http://docs.python-guide.org/en/latest/starting/install/win/>`_,
 `Linux <http://docs.python-guide.org/en/latest/starting/install/linux/>`_) installed.
 Run simply:
@@ -93,7 +93,7 @@ Run tests via
 
 .. code-block:: bash
 
-  $ py.test-2.7 && py.test-3.4 && py.test-3.5 && py.test-3.6 && py.test-3.7 && py.test-3.8
+  $ py.test-2.7 && py.test-3.5 && py.test-3.6 && py.test-3.7 && py.test-3.8 && py.test-3.9
 
 
 Acknowledgements
