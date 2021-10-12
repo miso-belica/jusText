@@ -32,6 +32,7 @@ setup(
     license="The BSD 2-Clause License",
     install_requires=[
         'lxml >= 4.4.2',
+        'backports.functools-lru-cache; python_version < "3.2"'
     ],
     tests_require=[
         "pytest",
