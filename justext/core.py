@@ -13,6 +13,11 @@ import re
 import lxml.html
 import lxml.sax
 
+try:
+    from functools import lru_cache
+except ImportError:
+    from backports.functools_lru_cache import lru_cache
+
 from lxml.html.clean import Cleaner
 from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
@@ -29,15 +34,17 @@ NO_HEADINGS_DEFAULT = False
 # Short and near-good headings within MAX_HEADING_DISTANCE characters before
 # a good paragraph are classified as good unless --no-headings is specified.
 MAX_HEADING_DISTANCE_DEFAULT = 200
-PARAGRAPH_TAGS = [
+PARAGRAPH_TAGS = {
     'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
     'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
     'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
     'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-]
+}
 DEFAULT_ENCODING = 'utf8'
 DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""", re.IGNORECASE)
+SELECT_PATTERN = re.compile(r'^select|\.select')
+GOOD_OR_BAD = {'good', 'bad'}
 
 
 class JustextError(Exception):
@@ -223,13 +230,20 @@ class PathInfo(object):
         return self
 
 
+@lru_cache(maxsize=128)  # 100 stoplists
+def define_stoplist(stoplist):
+    "Lower-case all words in stoplist and create frozen set."
+    stoplist = frozenset(w.lower() for w in stoplist)
+    return stoplist
+
+
 def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         no_headings=NO_HEADINGS_DEFAULT):
     "Context-free paragraph classification."
 
-    stoplist = frozenset(w.lower() for w in stoplist)
+    stoplist = define_stoplist(stoplist)
     for paragraph in paragraphs:
         length = len(paragraph)
         stopword_density = paragraph.stopwords_density(stoplist)
@@ -240,7 +254,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
             paragraph.cf_class = 'bad'
         elif ('\xa9' in paragraph.text) or ('&copy' in paragraph.text):
             paragraph.cf_class = 'bad'
-        elif re.search(r'^select|\.select', paragraph.dom_path):
+        elif SELECT_PATTERN.search(paragraph.dom_path):
             paragraph.cf_class = 'bad'
         elif length < length_low:
             if paragraph.chars_count_in_links > 0:
@@ -262,7 +276,7 @@ def _get_neighbour(i, paragraphs, ignore_neargood, inc, boundary):
     while i + inc != boundary:
         i += inc
         c = paragraphs[i].class_type
-        if c in ['good', 'bad']:
+        if c in GOOD_OR_BAD:
             return c
         if c == 'neargood' and not ignore_neargood:
             return c
