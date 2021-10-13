@@ -43,7 +43,6 @@ PARAGRAPH_TAGS = frozenset({
 DEFAULT_ENCODING = 'utf8'
 DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""", re.IGNORECASE)
-SELECT_PATTERN = re.compile(r'^select|\.select')
 GOOD_OR_BAD = {'good', 'bad'}
 
 
@@ -254,7 +253,7 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
             paragraph.cf_class = 'bad'
         elif ('\xa9' in paragraph.text) or ('&copy' in paragraph.text):
             paragraph.cf_class = 'bad'
-        elif SELECT_PATTERN.search(paragraph.dom_path):
+        elif 'select' in paragraph.dom_path:
             paragraph.cf_class = 'bad'
         elif length < length_low:
             if paragraph.chars_count_in_links > 0:
