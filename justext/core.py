@@ -142,6 +142,7 @@ class ParagraphMaker(ContentHandler):
         return handler.paragraphs
 
     def __init__(self):
+        super(ParagraphMaker, self).__init__()
         self.path = PathInfo()
         self.paragraphs = []
         self.paragraph = None
@@ -331,10 +332,10 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
             continue
         prev_neighbour = get_prev_neighbour(i, paragraphs, ignore_neargood=True)
         next_neighbour = get_next_neighbour(i, paragraphs, ignore_neargood=True)
-        neighbours = set((prev_neighbour, next_neighbour))
-        if neighbours == set(['good']):
+        neighbours = {prev_neighbour, next_neighbour}
+        if neighbours == {'good'}:
             new_classes[i] = 'good'
-        elif neighbours == set(['bad']):
+        elif neighbours == {'bad'}:
             new_classes[i] = 'bad'
         # it must be set(['good', 'bad'])
         elif (prev_neighbour == 'bad' and get_prev_neighbour(i, paragraphs, ignore_neargood=False) == 'neargood') or \
