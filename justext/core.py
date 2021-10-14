@@ -128,6 +128,8 @@ def preprocessor(dom):
     return cleaner.clean_html(dom)
 
 
+# super(...).__init__() breaks Python 2.7 - TypeError: super() argument 1 must be type, not classobj
+# noinspection PyMissingConstructor
 class ParagraphMaker(ContentHandler):
     """
     A class for converting a HTML page represented as a DOM object into a list
@@ -142,7 +144,6 @@ class ParagraphMaker(ContentHandler):
         return handler.paragraphs
 
     def __init__(self):
-        super(ParagraphMaker, self).__init__()
         self.path = PathInfo()
         self.paragraphs = []
         self.paragraph = None
