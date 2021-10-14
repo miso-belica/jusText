@@ -168,7 +168,9 @@ class ParagraphMaker(ContentHandler):
             self._start_new_pragraph()
         else:
             self.br = bool(name == "br")
-            if name == 'a':
+            if self.br:
+                self.paragraph.append_text(' ')
+            elif name == 'a':
                 self.link = True
             self.paragraph.tags_count += 1
 
