@@ -1,0 +1,113 @@
+body {
+    font-family: Trebuchet MS, Helvetica, Verdana, Arial, sans-serif;
+}
+
+h1 {
+    margin-left: 10px;
+    margin-bottom: 0.2em;
+}
+
+div.description {
+    margin-left: 10px;
+    margin-bottom: 0.7em;
+}
+
+p.heading {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+p.good, p.heading, p.bad {
+    font-family: Times New Roman, serif;
+    width: 550px;
+    text-align: justify;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+p.good, p.heading {
+    background-color: #cfc;
+}
+
+p.bad {
+/*    color: #f00;*/
+    background-color: #fdd;
+    font-size: 70%%;
+}
+
+div#output_wrapper {
+    width: 800px;
+}
+
+div.paragraph_details {
+    width: 240px;
+    float: right;
+    display: none;
+}
+
+div.paragraph_details table {
+    font-size: 75%;
+    border-collapse: collapse;
+}
+
+div.paragraph_details table td {
+    padding-left: 2px;
+    padding-right: 2px;
+    border: 1px solid #fff;
+}
+
+div.paragraph_details.good table,
+div.paragraph_details.heading table {
+    border: 1px solid #9f9;
+}
+
+div.paragraph_details.bad table {
+    border: 1px solid #faa;
+}
+
+div.paragraph_details.good table tr,
+div.paragraph_details.heading table tr {
+    background-color: #9f9;
+}
+
+div.paragraph_details.bad table tr {
+    background-color: #faa;
+}
+
+span.stopword {
+    text-decoration: underline;
+}
+
+fieldset {
+    width: 528px;
+    background-color: #eee;
+    border: 1px solid black;
+}
+
+div#error {
+    font-weight: bold;
+    color: #a00;
+    margin-bottom: .3em;
+}
+
+div#basic_options td.label {
+    width: 80px;
+}
+
+div#basic_options input.wide {
+    width: 438;
+}
+
+div#advanced_options {
+    display: none;
+}
+
+input#submit {
+    float: right;
+}
+
+div#footer {
+    width: 558px;
+}
