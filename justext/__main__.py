@@ -3,14 +3,14 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
-import re
+import codecs
 import os
+import re
 import sys
 
-import codecs
-
+from ._compat import escape, PY3, URLError, urllib
 from .core import *
-from ._compat import urllib, URLError, escape, PY3
+from .utils import get_stoplist, get_stoplists
 
 
 def usage():
