@@ -291,7 +291,6 @@ def main():
             except (IOError, URLError) as e:
                 raise JustextInvalidOptions(
                     "Can't open %s for reading: %s" % (args[0], e))
-                sys.exit(1)
 
         html_text = fp_in.read()
         if fp_in is not sys.stdin:
