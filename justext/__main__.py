@@ -205,7 +205,7 @@ def main():
                     elif a in get_stoplists():
                         stoplist = get_stoplist(a)
                     else:
-                        if re.match('^\w*$', a):
+                        if re.match(r'^\w*$', a):
                             # only alphabetical chars, probably misspelled or
                             # unsupported language
                             raise JustextInvalidOptions(
