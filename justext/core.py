@@ -309,12 +309,11 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
     Context-sensitive paragraph classification. Assumes that classify_pragraphs
     has already been called.
     """
-    # copy classes
-    for paragraph in paragraphs:
-        paragraph.class_type = paragraph.cf_class
 
     # good headings
     for i, paragraph in enumerate(paragraphs):
+        # copy classes
+        paragraph.class_type = paragraph.cf_class
         if not (paragraph.heading and paragraph.class_type == 'short'):
             continue
         j = i + 1
@@ -333,10 +332,9 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
             continue
         prev_neighbour = get_prev_neighbour(i, paragraphs, ignore_neargood=True)
         next_neighbour = get_next_neighbour(i, paragraphs, ignore_neargood=True)
-        neighbours = {prev_neighbour, next_neighbour}
-        if neighbours == {'good'}:
+        if prev_neighbour == 'good' and next_neighbour == 'good':
             new_classes[i] = 'good'
-        elif neighbours == {'bad'}:
+        elif prev_neighbour == 'bad' and next_neighbour == 'bad':
             new_classes[i] = 'bad'
         # it must be set(['good', 'bad'])
         elif (prev_neighbour == 'bad' and get_prev_neighbour(i, paragraphs, ignore_neargood=False) == 'neargood') or \
