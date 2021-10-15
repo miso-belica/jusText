@@ -25,8 +25,7 @@ def _replace_whitespace(match):
 
     if "\n" in text or "\r" in text:
         return "\n"
-    else:
-        return " "
+    return " "
 
 
 def is_blank(string):
