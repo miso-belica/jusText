@@ -49,7 +49,7 @@ class Paragraph(object):
         return text
 
     def stopwords_count(self, stopwords):
-        return sum([word.lower() in stopwords for word in self.text.split()])
+        return sum(word.lower() in stopwords for word in self.text.split())
 
     def stopwords_density(self, stopwords):
         if self.words_count == 0:
