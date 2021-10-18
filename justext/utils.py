@@ -21,11 +21,9 @@ def normalize_whitespace(text):
 
 
 def _replace_whitespace(match):
+    """Normalize all spacing characters that aren't a newline to a space."""
     text = match.group()
-
-    if "\n" in text or "\r" in text:
-        return "\n"
-    return " "
+    return "\n" if "\n" in text or "\r" in text else " "
 
 
 def is_blank(string):
