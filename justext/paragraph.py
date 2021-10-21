@@ -19,6 +19,7 @@ class Paragraph(object):
         self.text_nodes = []
         self.chars_count_in_links = 0
         self.tags_count = 0
+        self.class_type = ""  # short | neargood | good | bad
 
     @property
     def is_heading(self):
