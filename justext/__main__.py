@@ -178,7 +178,7 @@ def main():
                     os.path.basename(sys.argv[0]), VERSION))
                 sys.exit(0)
             elif o == "--list-stoplists":
-                print("\n".join(get_stoplists()))
+                print("\n".join(sorted(get_stoplists())))
                 sys.exit(0)
             elif o == "-o":
                 try:
@@ -210,7 +210,7 @@ def main():
                             # unsupported language
                             raise JustextInvalidOptions(
                                 "Unknown stoplist: %s\nAvailable stoplists:\n%s" % (
-                                    a, '\n'.join(get_stoplists())))
+                                    a, '\n'.join(sorted(get_stoplists()))))
                         else:
                             # probably incorrectly specified path
                             raise JustextInvalidOptions("File not found: %s" % a)
