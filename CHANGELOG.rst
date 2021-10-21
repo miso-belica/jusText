@@ -3,7 +3,7 @@
 Changelog for jusText
 =====================
 
-3.0.0 (20XX-XX-XX)
+3.0.0 (2021-10-21)
 ------------------
 - *INCOMPATIBLE CHANGE:* Dropped support for Python 3.4 and below.
 - *BUG FIX:* Don't join words separated only by ``<br>`` tag.
