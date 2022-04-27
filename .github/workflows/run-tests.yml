@@ -33,7 +33,7 @@ jobs:
           pip install -U lxml pytest codecov coverage pytest-cov
         if: ${{ matrix.python-version != '2.7' }}
 
-      - run: py.test tests
+      - run: py.test --cov=justext --cov-report=term-missing --no-cov-on-fail tests
         env:
           CI: 1
           PYTHONDONTWRITEBYTECODE: 1

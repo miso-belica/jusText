@@ -64,3 +64,6 @@ class Paragraph(object):
             return 0
 
         return self.chars_count_in_links / text_length
+
+    def __repr__(self):
+        return "<Paragraph %s: %s>" % (self.class_type, self.xpath)
