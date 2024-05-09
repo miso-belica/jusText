@@ -12,4 +12,4 @@ from .utils import get_stoplists, get_stoplist
 from .core import justext
 
 
-__version__ = "3.0.0"
+__version__ = "3.0.1"

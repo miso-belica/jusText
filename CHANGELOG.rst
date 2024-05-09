@@ -3,6 +3,10 @@
 Changelog for jusText
 =====================
 
+3.0.1 (2024-05-09)
+------------------
+- *BUG FIX:* Fix issue with new version of lxml `#48 <https://github.com/miso-belica/jusText/pull/48>`_.
+
 3.0.0 (2021-10-21)
 ------------------
 - *INCOMPATIBLE CHANGE:* Dropped support for Python 3.4 and below.
