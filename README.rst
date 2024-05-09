@@ -4,8 +4,8 @@
 
 jusText
 =======
-.. image:: https://api.travis-ci.org/miso-belica/jusText.png?branch=master
-  :target: https://travis-ci.org/miso-belica/jusText
+.. image:: https://github.com/miso-belica/jusText/actions/workflows/run-tests.yml/badge.svg
+  :target: https://github.com/miso-belica/jusText/actions/workflows/run-tests.yml
 
 Program jusText is a tool for removing boilerplate content, such as navigation
 links, headers, and footers from HTML pages. It is
