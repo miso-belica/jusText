@@ -24,13 +24,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           # pytest 4.6.X works best for older Python versions
-          pip install -U lxml "pytest==4.6.9" codecov 'coverage==4.5.4' pytest-cov
+          pip install -U "lxml[html_clean]" "pytest==4.6.9" codecov 'coverage==4.5.4' pytest-cov
         if: ${{ matrix.python-version == '2.7' }}
 
       - name: "Install dependencies (up to date)"
         run: |
           python -m pip install --upgrade pip
-          pip install -U lxml pytest codecov coverage pytest-cov
+          pip install -U "lxml[html_clean]" pytest codecov coverage pytest-cov
         if: ${{ matrix.python-version != '2.7' }}
 
       - run: py.test tests
