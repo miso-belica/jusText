@@ -18,12 +18,12 @@ else:
 string_types = (bytes, unicode,)
 
 
-try:
-    import urllib2 as urllib
-    URLError = urllib.URLError
-except ImportError:
+if PY3:
     import urllib.request as urllib
     from urllib.error import URLError
+else:
+    import urllib2 as urllib
+    URLError = urllib.URLError
 
 
 try:
