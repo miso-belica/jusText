@@ -3,6 +3,10 @@
 Changelog for jusText
 =====================
 
+3.0.2 (2025-02-25)
+------------------
+- *BUG FIX:* Handle urllib imports in Python 2 and 3 correctly `#51 <https://github.com/miso-belica/jusText/pull/51>`_.
+
 3.0.1 (2024-05-09)
 ------------------
 - *BUG FIX:* Fix issue with new version of lxml `#48 <https://github.com/miso-belica/jusText/pull/48>`_.
