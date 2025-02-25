@@ -21,7 +21,7 @@ with open("README.rst") as readme:
 
 setup(
     name="jusText",
-    version="3.0.1",
+    version="3.0.2",
     description="Heuristic based boilerplate removal tool",
     long_description=long_description,
     author="Jan Pomikálek",
