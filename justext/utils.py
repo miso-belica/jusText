@@ -8,7 +8,10 @@ import os
 import sys
 import pkgutil
 
-MULTIPLE_WHITESPACE_PATTERN = re.compile(r"\s+", re.UNICODE)
+# BOM (U+FEFF) and its byte-swapped counterpart (U+FFFE) are not matched by
+# `\s` but they carry no visible content, so treat them as white-space.
+MULTIPLE_WHITESPACE_PATTERN = re.compile(r"[\s﻿￾]+", re.UNICODE)
+ONLY_WHITESPACE_PATTERN = re.compile(r"\A[\s﻿￾]*\Z", re.UNICODE)
 
 
 def normalize_whitespace(text):
@@ -31,7 +34,7 @@ def is_blank(string):
     Returns `True` if string contains only white-space characters
     or is empty. Otherwise `False` is returned.
     """
-    return not string or string.isspace()
+    return not string or bool(ONLY_WHITESPACE_PATTERN.match(string))
 
 
 def get_stoplists():
