@@ -34,6 +34,9 @@ NO_HEADINGS_DEFAULT = False
 # Short and near-good headings within MAX_HEADING_DISTANCE characters before
 # a good paragraph are classified as good unless --no-headings is specified.
 MAX_HEADING_DISTANCE_DEFAULT = 200
+# Maximum distance (in paragraphs) of a short/near-good paragraph from a good
+# paragraph for the good one to be taken into account as its neighbour.
+MAX_GOOD_DISTANCE_DEFAULT = 5
 PARAGRAPH_TAGS = frozenset({
     'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
     'div', 'dl', 'dt', 'fieldset', 'figcaption', 'form', 'legend', 'optgroup',
@@ -293,25 +296,32 @@ def _get_neighbour(i, paragraphs, ignore_neargood, inc, boundary):
     return 'bad'
 
 
-def get_prev_neighbour(i, paragraphs, ignore_neargood):
+def get_prev_neighbour(i, paragraphs, ignore_neargood,
+        max_good_distance=MAX_GOOD_DISTANCE_DEFAULT):
     """
     Return the class of the paragraph at the top end of the short/neargood
-    paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
-    can be returned, otherwise 'neargood' can be returned, too.
+    paragraphs block, up to max_good_distance paragraphs far. If
+    ignore_neargood is True, than only 'bad' or 'good' can be returned,
+    otherwise 'neargood' can be returned, too.
     """
-    return _get_neighbour(i, paragraphs, ignore_neargood, -1, -1)
+    return _get_neighbour(i, paragraphs, ignore_neargood, -1,
+        max(i - max_good_distance, -1))
 
 
-def get_next_neighbour(i, paragraphs, ignore_neargood):
+def get_next_neighbour(i, paragraphs, ignore_neargood,
+        max_good_distance=MAX_GOOD_DISTANCE_DEFAULT):
     """
     Return the class of the paragraph at the bottom end of the short/neargood
-    paragraphs block. If ignore_neargood is True, than only 'bad' or 'good'
-    can be returned, otherwise 'neargood' can be returned, too.
+    paragraphs block, up to max_good_distance paragraphs far. If
+    ignore_neargood is True, than only 'bad' or 'good' can be returned,
+    otherwise 'neargood' can be returned, too.
     """
-    return _get_neighbour(i, paragraphs, ignore_neargood, 1, len(paragraphs))
+    return _get_neighbour(i, paragraphs, ignore_neargood, 1,
+        min(i + max_good_distance, len(paragraphs)))
 
 
-def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT):
+def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT,
+        max_good_distance=MAX_GOOD_DISTANCE_DEFAULT):
     """
     Context-sensitive paragraph classification. Assumes that classify_pragraphs
     has already been called.
@@ -337,15 +347,15 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
     for i, paragraph in enumerate(paragraphs):
         if paragraph.class_type != 'short':
             continue
-        prev_neighbour = get_prev_neighbour(i, paragraphs, ignore_neargood=True)
-        next_neighbour = get_next_neighbour(i, paragraphs, ignore_neargood=True)
+        prev_neighbour = get_prev_neighbour(i, paragraphs, True, max_good_distance)
+        next_neighbour = get_next_neighbour(i, paragraphs, True, max_good_distance)
         if prev_neighbour == 'good' and next_neighbour == 'good':
             new_classes[i] = 'good'
         elif prev_neighbour == 'bad' and next_neighbour == 'bad':
             new_classes[i] = 'bad'
         # it must be set(['good', 'bad'])
-        elif (prev_neighbour == 'bad' and get_prev_neighbour(i, paragraphs, ignore_neargood=False) == 'neargood') or \
-             (next_neighbour == 'bad' and get_next_neighbour(i, paragraphs, ignore_neargood=False) == 'neargood'):
+        elif (prev_neighbour == 'bad' and get_prev_neighbour(i, paragraphs, False, max_good_distance) == 'neargood') or \
+             (next_neighbour == 'bad' and get_next_neighbour(i, paragraphs, False, max_good_distance) == 'neargood'):
             new_classes[i] = 'good'
         else:
             new_classes[i] = 'bad'
@@ -357,8 +367,8 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
     for i, paragraph in enumerate(paragraphs):
         if paragraph.class_type != 'neargood':
             continue
-        prev_neighbour = get_prev_neighbour(i, paragraphs, ignore_neargood=True)
-        next_neighbour = get_next_neighbour(i, paragraphs, ignore_neargood=True)
+        prev_neighbour = get_prev_neighbour(i, paragraphs, True, max_good_distance)
+        next_neighbour = get_next_neighbour(i, paragraphs, True, max_good_distance)
         if (prev_neighbour, next_neighbour) == ('bad', 'bad'):
             paragraph.class_type = 'bad'
         else:
@@ -383,7 +393,8 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT, no_headings=NO_HEADINGS_DEFAULT,
         encoding=None, default_encoding=DEFAULT_ENCODING,
-        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor):
+        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor,
+        max_good_distance=MAX_GOOD_DISTANCE_DEFAULT):
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
@@ -395,6 +406,6 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
 
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
         stopwords_low, stopwords_high, max_link_density, no_headings)
-    revise_paragraph_classification(paragraphs, max_heading_distance)
+    revise_paragraph_classification(paragraphs, max_heading_distance, max_good_distance)
 
     return paragraphs
