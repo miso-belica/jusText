@@ -36,8 +36,8 @@ NO_HEADINGS_DEFAULT = False
 MAX_HEADING_DISTANCE_DEFAULT = 200
 PARAGRAPH_TAGS = frozenset({
     'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
-    'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
-    'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
+    'div', 'dl', 'dt', 'fieldset', 'figcaption', 'form', 'legend', 'optgroup',
+    'option', 'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
     'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
 })
 DEFAULT_ENCODING = 'utf8'
