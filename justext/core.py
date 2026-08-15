@@ -255,8 +255,6 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
 
         if link_density > max_link_density:
             paragraph.cf_class = 'bad'
-        elif ('\xa9' in paragraph.text) or ('&copy' in paragraph.text):
-            paragraph.cf_class = 'bad'
         elif 'select' in paragraph.dom_path:
             paragraph.cf_class = 'bad'
         elif length < length_low:
@@ -273,6 +271,15 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
             paragraph.cf_class = 'neargood'
         else:
             paragraph.cf_class = 'bad'
+
+        if ('\xa9' in paragraph.text) or ('&copy' in paragraph.text):
+            # The copyright symbol hints at boilerplate but it also appears
+            # inside good paragraphs, so only lower the class by one step
+            # instead of rejecting the paragraph outright.
+            if paragraph.cf_class == 'good':
+                paragraph.cf_class = 'neargood'
+            elif paragraph.cf_class == 'short':
+                paragraph.cf_class = 'bad'
 
 
 def _get_neighbour(i, paragraphs, ignore_neargood, inc, boundary):
