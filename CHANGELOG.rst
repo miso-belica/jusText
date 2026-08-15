@@ -6,6 +6,10 @@ Changelog for jusText
 Unreleased ()
 ------------------
 - *BUG FIX:* Respect UTF-8 and UTF-16 byte order marks when decoding HTML `#55 <https://github.com/miso-belica/jusText/pull/55>`_.
+- *FEATURE:* New parameter ``max_good_distance`` (CLI ``--max-good-distance``)
+  limits how far the context-sensitive classification looks for a good
+  neighbouring paragraph. Defaults to 5 paragraphs, previously the whole
+  document was searched.
 
 3.0.2 (2025-02-25)
 ------------------

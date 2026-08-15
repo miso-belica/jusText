@@ -58,6 +58,7 @@ Advanced options:
   --stopwords-high=FLOAT (default %(stopwords_high)f)
   --max-link-density=FLOAT (default %(max_link_density)f)
   --max-heading-distance=INT (default %(max_heading_distance)i)
+  --max-good-distance=INT (default %(max_good_distance)i)
 """ % {
     'progname': os.path.basename(os.path.basename(sys.argv[0])),
     'length_low': LENGTH_LOW_DEFAULT,
@@ -66,6 +67,7 @@ Advanced options:
     'stopwords_high': STOPWORDS_HIGH_DEFAULT,
     'max_link_density': MAX_LINK_DENSITY_DEFAULT,
     'max_heading_distance': MAX_HEADING_DISTANCE_DEFAULT,
+    'max_good_distance': MAX_GOOD_DISTANCE_DEFAULT,
     'default_encoding': DEFAULT_ENCODING,
     'default_enc_errors': DEFAULT_ENC_ERRORS,
 }
@@ -142,7 +144,7 @@ def main():
             "enc-force", "enc-errors=", "format=",
             "no-headings", "help", "version", "length-low=", "length-high=",
             "stopwords-low=", "stopwords-high=", "max-link-density=",
-            "max-heading-distance=", "list-stoplists"])
+            "max-heading-distance=", "max-good-distance=", "list-stoplists"])
     except getopt.GetoptError as e:
         print(e, file=sys.stderr)
         print(usage(), file=sys.stderr)
@@ -163,6 +165,7 @@ def main():
     stopwords_high = STOPWORDS_HIGH_DEFAULT
     max_link_density = MAX_LINK_DENSITY_DEFAULT
     max_heading_distance = MAX_HEADING_DISTANCE_DEFAULT
+    max_good_distance = MAX_GOOD_DISTANCE_DEFAULT
     encoding = None
     default_encoding = DEFAULT_ENCODING
     force_default_encoding = False
@@ -270,6 +273,12 @@ def main():
                 except ValueError:
                     raise JustextInvalidOptions(
                         "Invalid value for %s: '%s'. Integer expected." % (o, a))
+            elif o == "--max-good-distance":
+                try:
+                    max_good_distance = int(a)
+                except ValueError:
+                    raise JustextInvalidOptions(
+                        "Invalid value for %s: '%s'. Integer expected." % (o, a))
 
         if force_default_encoding:
             encoding = default_encoding
@@ -298,7 +307,8 @@ def main():
 
         paragraphs = justext(html_text, stoplist, length_low, length_high,
             stopwords_low, stopwords_high, max_link_density, max_heading_distance,
-            no_headings, encoding, default_encoding, enc_errors)
+            no_headings, encoding, default_encoding, enc_errors,
+            max_good_distance=max_good_distance)
         if format == "default":
             output_default(paragraphs, fp_out)
         elif format == "boilerplate":
