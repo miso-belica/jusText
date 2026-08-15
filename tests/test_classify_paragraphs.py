@@ -86,3 +86,17 @@ class TestClassifyParagraphs():
         assert paragraphs[0].cf_class == "neargood"
         assert paragraphs[1].cf_class == "neargood"
         assert paragraphs[2].cf_class == "bad"
+
+    def test_copyright_symbol_only_lowers_the_class(self):
+        text = "0 1 2 3 4 5 6 7 8 9" * 12
+        paragraphs = [
+            self._paragraph(text=text),
+            self._paragraph(text=text + " \u00a9 2020"),
+            self._paragraph(text="0 1 \u00a9 2020"),
+        ]
+
+        classify_paragraphs(paragraphs, tuple(str(i) for i in range(10)))
+
+        assert paragraphs[0].cf_class == "good"
+        assert paragraphs[1].cf_class == "neargood"
+        assert paragraphs[2].cf_class == "bad"
