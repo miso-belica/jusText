@@ -3,6 +3,22 @@
 Changelog for jusText
 =====================
 
+Unreleased
+----------
+The changes below were ported from the upstream jusText at
+`corpus.tools <https://corpus.tools/wiki/Justext>`_.
+
+- *FEATURE:* New parameter ``max_good_distance`` (CLI ``--max-good-distance``)
+  limits how far the context-sensitive classification looks for a good
+  neighbouring paragraph. Defaults to 5 paragraphs, previously the whole
+  document was searched.
+- *BUG FIX:* BOM characters (U+FEFF, U+FFFE) are treated as white-space.
+- *BUG FIX:* ``<figcaption>`` starts a new paragraph, so a caption is no
+  longer glued to the text following the ``<figure>`` element.
+- *BUG FIX:* A paragraph containing the copyright symbol is demoted by one
+  class instead of being rejected outright.
+- *BUG FIX:* Removed Latin-script words from the Korean stop-list.
+
 3.0.2 (2025-02-25)
 ------------------
 - *BUG FIX:* Handle urllib imports in Python 2 and 3 correctly `#51 <https://github.com/miso-belica/jusText/pull/51>`_.
