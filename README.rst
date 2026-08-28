@@ -23,6 +23,7 @@ Adaptations of the algorithm to other languages:
 - `C++ <https://github.com/endredy/jusText>`_
 - `Go <https://github.com/JalfResi/justext>`_
 - `Java <https://github.com/wizenoze/justext-java>`_
+- `Javascript <https://github.com/smodin-io/justext>`_
 
 
 Some libraries using jusText:
