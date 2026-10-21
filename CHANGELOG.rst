@@ -6,6 +6,8 @@ Changelog for jusText
 Unreleased ()
 ------------------
 - *BUG FIX:* Respect UTF-8 and UTF-16 byte order marks when decoding HTML `#55 <https://github.com/miso-belica/jusText/pull/55>`_.
+- *BUG FIX:* ``<footer>`` elements are removed before paragraph extraction,
+  except a ``<footer>`` inside ``<blockquote>`` holding a quote attribution.
 
 3.0.2 (2025-02-25)
 ------------------
