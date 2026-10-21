@@ -15,7 +15,9 @@ Unreleased ()
   longer glued to the text following the ``<figure>`` element.
 - *BUG FIX:* A paragraph containing the copyright symbol is demoted by one
   class instead of being rejected outright.
-- *BUG FIX:* Removed Latin-script words from the Korean stop-list.
+- *BUG FIX:* Removed Latin-script words (English words, Roman numerals,
+  wiki markup) from the stop-lists of non-Latin-script languages.
+  Serbian is left as is, since it is written in both scripts.
 
 3.0.2 (2025-02-25)
 ------------------
