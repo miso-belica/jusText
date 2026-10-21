@@ -12,6 +12,8 @@ The changes below were ported from the upstream jusText at
   limits how far the context-sensitive classification looks for a good
   neighbouring paragraph. Defaults to 5 paragraphs, previously the whole
   document was searched.
+- *BUG FIX:* ``<nav>`` and ``<footer>`` elements are removed before
+  paragraph extraction (except a ``<footer>`` inside ``<blockquote>``).
 - *BUG FIX:* BOM characters (U+FEFF, U+FFFE) are treated as white-space.
 - *BUG FIX:* ``<figcaption>`` starts a new paragraph, so a caption is no
   longer glued to the text following the ``<figure>`` element.
