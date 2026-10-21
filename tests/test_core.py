@@ -27,3 +27,17 @@ def test_max_good_distance_limits_the_neighbour_lookup():
     # without the limit a single good paragraph pulls in the whole block
     assert all(not p.is_boilerplate for p in near)
     assert [p.is_boilerplate for p in far] == [False] + [True] * 12 + [False]
+
+
+ARTICLE_PARAGRAPH = "<p>%s</p>" % (
+    "The council voted on Tuesday to approve the new budget for the city. " * 3)
+
+
+def test_nav_is_removed():
+    html = ("<article><nav><h2>Contents</h2><ul><li><a href='#budget'>Budget</a>"
+        "</li></ul></nav>" + ARTICLE_PARAGRAPH * 2 + "</article>")
+
+    paragraphs = justext.justext(html, justext.get_stoplist("English"))
+
+    # the short heading of the table of contents used to be kept as good text
+    assert "Contents" not in [p.text for p in paragraphs]

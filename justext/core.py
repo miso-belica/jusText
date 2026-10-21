@@ -124,7 +124,7 @@ def preprocessor(dom):
         "style": True,
         "embedded": True,
         "forms": True,
-        "kill_tags": ("head",),
+        "kill_tags": ("head", "nav"),
     }
     cleaner = Cleaner(**options)
 
