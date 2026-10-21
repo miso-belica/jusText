@@ -127,8 +127,13 @@ def preprocessor(dom):
         "kill_tags": ("head", "nav"),
     }
     cleaner = Cleaner(**options)
+    dom = cleaner.clean_html(dom)
 
-    return cleaner.clean_html(dom)
+    # <footer> inside <blockquote> holds the attribution of the quote
+    for footer in dom.xpath("//footer[not(ancestor::blockquote)]"):
+        footer.drop_tree()
+
+    return dom
 
 
 # super(...).__init__() breaks Python 2.7 - TypeError: super() argument 1 must be type, not classobj
