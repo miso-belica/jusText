@@ -9,6 +9,7 @@ This software is licensed as described in the file LICENSE.rst.
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
+import codecs
 import re
 import lxml.html
 import lxml.sax
@@ -44,6 +45,25 @@ DEFAULT_ENCODING = 'utf8'
 DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""", re.IGNORECASE)
 GOOD_OR_BAD = {'good', 'bad'}
+# Labels that browsers decode with a superset of the Python codec of the same
+# name, or that Python has no codec for. They are mapped to the closest Python
+# codec. See https://encoding.spec.whatwg.org/#names-and-labels
+ENCODING_LABEL_ALIASES = dict(
+    (label, codec)
+    for codec, labels in (
+        # windows-1252, not ISO-8859-1 or ASCII
+        ('cp1252', 'ansi_x3.4-1968 ascii cp819 csisolatin1 ibm819 iso-8859-1 '
+                   'iso-ir-100 iso8859-1 iso88591 iso_8859-1 iso_8859-1:1987 '
+                   'l1 latin1 us-ascii x-cp1252'),
+        # GBK, which browsers decode as GB 18030
+        ('gb18030', 'chinese csgb2312 csiso58gb231280 gb2312 gb_2312 '
+                    'gb_2312-80 gbk iso-ir-58 x-gbk'),
+        # Shift_JIS, which browsers decode with the Windows-31J extensions
+        ('cp932', 'csshiftjis ms932 ms_kanji shift-jis shift_jis sjis '
+                  'windows-31j x-sjis'),
+    )
+    for label in labels.split()
+)
 
 
 class JustextError(Exception):
@@ -77,7 +97,7 @@ def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
 def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """
     Converts a `html` containing an HTML page into Unicode.
-    Tries to guess character encoding from meta tag.
+    Tries to guess character encoding from byte order mark or meta tag.
     """
     if isinstance(html, unicode):
         return html
@@ -85,9 +105,17 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     if encoding:
         return html.decode(encoding, errors)
 
+    # byte order mark wins over the declared encoding
+    # https://encoding.spec.whatwg.org/#bom-sniff
+    if html.startswith(codecs.BOM_UTF8):
+        return html.decode("utf-8-sig", errors)
+    if html.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+        return html.decode("utf-16", errors)
+
     match = CHARSET_META_TAG_PATTERN.search(html)
     if match:
         declared_encoding = match.group(1).decode("ASCII")
+        declared_encoding = ENCODING_LABEL_ALIASES.get(declared_encoding.lower(), declared_encoding)
         # proceed unknown encoding as if it wasn't found at all
         with ignored(LookupError):
             return html.decode(declared_encoding, errors)
