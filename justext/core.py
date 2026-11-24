@@ -9,6 +9,7 @@ This software is licensed as described in the file LICENSE.rst.
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
+import codecs
 import re
 import lxml.html
 import lxml.sax
@@ -77,13 +78,20 @@ def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
 def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """
     Converts a `html` containing an HTML page into Unicode.
-    Tries to guess character encoding from meta tag.
+    Tries to guess character encoding from byte order mark or meta tag.
     """
     if isinstance(html, unicode):
         return html
 
     if encoding:
         return html.decode(encoding, errors)
+
+    # byte order mark wins over the declared encoding
+    # https://encoding.spec.whatwg.org/#bom-sniff
+    if html.startswith(codecs.BOM_UTF8):
+        return html.decode("utf-8-sig", errors)
+    if html.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+        return html.decode("utf-16", errors)
 
     match = CHARSET_META_TAG_PATTERN.search(html)
     if match:

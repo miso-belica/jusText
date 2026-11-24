@@ -3,10 +3,11 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
+import codecs
 import unittest
 import pytest
 
-from justext.core import JustextError, decode_html
+from justext.core import JustextError, decode_html, html_to_dom
 
 
 class TestHtmlEncoding(unittest.TestCase):
@@ -132,3 +133,38 @@ class TestHtmlEncoding(unittest.TestCase):
 
         with pytest.raises(JustextError):
             decode_html(html.encode("iso-8859-2"), errors='strict')
+
+    def test_utf8_bom_is_not_part_of_the_text(self):
+        html = '<p>ľščťžýáíéäňúô Ł€</p>'
+        decoded_html = decode_html(codecs.BOM_UTF8 + html.encode("utf8"))
+
+        self.assert_strings_equal(html, decoded_html)
+
+    def test_utf8_bom_wins_over_meta(self):
+        html = '<meta charset="iso-8859-2"/> ľščťžäňôě'
+        decoded_html = decode_html(codecs.BOM_UTF8 + html.encode("utf8"))
+
+        self.assert_strings_equal(html, decoded_html)
+
+    def test_utf16_bom_le(self):
+        html = '<p>ľščťžýáíéäňúô Ł€</p>'
+        decoded_html = decode_html(codecs.BOM_UTF16_LE + html.encode("utf-16-le"))
+
+        self.assert_strings_equal(html, decoded_html)
+
+    def test_utf16_bom_be(self):
+        html = '<p>ľščťžýáíéäňúô Ł€</p>'
+        decoded_html = decode_html(codecs.BOM_UTF16_BE + html.encode("utf-16-be"))
+
+        self.assert_strings_equal(html, decoded_html)
+
+    def test_given_encoding_wins_over_bom(self):
+        decoded_html = decode_html(codecs.BOM_UTF8 + b"abc", encoding="iso-8859-1")
+
+        self.assert_strings_equal("\xef\xbb\xbfabc", decoded_html)
+
+    def test_utf16_html_to_dom(self):
+        html = '<html><body><p>ľščťž</p></body></html>'
+        dom = html_to_dom(codecs.BOM_UTF16_LE + html.encode("utf-16-le"))
+
+        self.assert_strings_equal("ľščťž", dom.text_content())
