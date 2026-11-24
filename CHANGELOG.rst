@@ -3,6 +3,10 @@
 Changelog for jusText
 =====================
 
+Unreleased ()
+------------------
+- *BUG FIX:* Respect UTF-8 and UTF-16 byte order marks when decoding HTML `#55 <https://github.com/miso-belica/jusText/pull/55>`_.
+
 3.0.2 (2025-02-25)
 ------------------
 - *BUG FIX:* Handle urllib imports in Python 2 and 3 correctly `#51 <https://github.com/miso-belica/jusText/pull/51>`_.
