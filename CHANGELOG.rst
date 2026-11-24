@@ -6,6 +6,9 @@ Changelog for jusText
 Unreleased ()
 ------------------
 - *BUG FIX:* Respect UTF-8 and UTF-16 byte order marks when decoding HTML `#55 <https://github.com/miso-belica/jusText/pull/55>`_.
+- *BUG FIX:* Removed Latin-script words (English words, Roman numerals,
+  wiki markup) from the stop-lists of non-Latin-script languages.
+  Serbian is left as is, since it is written in both scripts.
 
 3.0.2 (2025-02-25)
 ------------------
