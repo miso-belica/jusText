@@ -37,6 +37,9 @@ class TestStringUtils():
     def test_string_with_chars_is_not_blank(self):
         assert not is_blank("  #  ")
 
+    def test_string_with_byte_order_mark_is_blank(self):
+        assert is_blank("\ufeff \ufffe\t")
+
     def test_normalize_no_change(self):
         string = "a b c d e f g h i j k l m n o p q r s ..."
         assert string == normalize_whitespace(string)
@@ -54,6 +57,11 @@ class TestStringUtils():
     def test_normalize_non_break_spaces(self):
         string = "\u00A0\t €\u202F \t"
         expected = " € "
+        assert expected == normalize_whitespace(string)
+
+    def test_normalize_byte_order_marks(self):
+        string = "hello\ufeffworld\ufffe!"
+        expected = "hello world !"
         assert expected == normalize_whitespace(string)
 
 

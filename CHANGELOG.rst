@@ -7,6 +7,7 @@ Unreleased ()
 ------------------
 - *FEATURE:* Officially support Python 3.10 to 3.15. Python 3.9 and below still work but are no longer tested in CI.
 - *BUG FIX:* Respect UTF-8 and UTF-16 byte order marks when decoding HTML `#55 <https://github.com/miso-belica/jusText/pull/55>`_.
+- *BUG FIX:* BOM characters (U+FEFF, U+FFFE) inside the text are treated as white-space.
 
 3.0.2 (2025-02-25)
 ------------------
