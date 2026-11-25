@@ -113,7 +113,7 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
         declared_encoding = match.group(1).decode("ASCII")
         # proceed unknown encoding as if it wasn't found at all
         with ignored(LookupError):
-            return html.decode(declared_encoding, errors)
+            return _decode(html, declared_encoding, errors)
 
     # unknown encoding
     try:
