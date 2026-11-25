@@ -122,6 +122,9 @@ class TestHtmlEncoding(unittest.TestCase):
         with pytest.raises(JustextError):
             decode_html(html.encode("iso-8859-2"), errors='strict')
 
+    def test_unknown_encoding_in_strict_mode_is_decode_error(self):
+        self.assert_strict_decode_error(b"\xff", "ascii", default_encoding="ascii")
+
     def test_unknown_encoding_with_default_error_handler(self):
         html = 'ľščťžäňôě'
         decoded = decode_html(html.encode("iso-8859-2"), default_encoding="iso-8859-2")
