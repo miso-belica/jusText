@@ -175,6 +175,11 @@ class TestHtmlEncoding(unittest.TestCase):
 
         self.assert_strings_equal(html, decoded_html)
 
+    def test_utf16_bom_in_strict_mode(self):
+        # a lone high surrogate followed by a plain character
+        html = codecs.BOM_UTF16_LE + b"\x00\xd8" + "a".encode("utf-16-le")
+        self.assert_strict_decode_error(html, "utf-16")
+
     def test_utf16_bom_be(self):
         html = '<p>ľščťžýáíéäňúô Ł€</p>'
         decoded_html = decode_html(codecs.BOM_UTF16_BE + html.encode("utf-16-be"))

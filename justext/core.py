@@ -106,7 +106,7 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     if html.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
         return html.decode("utf-32", errors)
     if html.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
-        return html.decode("utf-16", errors)
+        return _decode(html, "utf-16", errors)
 
     match = CHARSET_META_TAG_PATTERN.search(html)
     if match:
