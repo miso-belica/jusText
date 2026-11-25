@@ -100,7 +100,7 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     # byte order mark wins over the declared encoding
     # https://encoding.spec.whatwg.org/#bom-sniff
     if html.startswith(codecs.BOM_UTF8):
-        return html.decode("utf-8-sig", errors)
+        return _decode(html, "utf-8-sig", errors)
     if html.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
         return html.decode("utf-16", errors)
 
