@@ -100,7 +100,7 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     # byte order mark wins over the declared encoding
     # https://encoding.spec.whatwg.org/#bom-sniff
     if html.startswith(codecs.BOM_UTF8):
-        return html.decode("utf-8-sig", errors)
+        return _decode(html, "utf-8-sig", errors)
     # WHATWG leaves UTF-32 out, but its BOMs are checked here too. The LE
     # one starts with the UTF-16 LE BOM, so it has to come first.
     if html.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
