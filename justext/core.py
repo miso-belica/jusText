@@ -55,6 +55,17 @@ class JustextInvalidOptions(JustextError):
     pass
 
 
+class JustextDecodeError(JustextError, UnicodeDecodeError):
+    "Raised when the HTML can't be decoded to Unicode with `errors='strict'`."
+
+
+def _decode(data, encoding, errors):
+    try:
+        return data.decode(encoding, errors)
+    except UnicodeDecodeError as e:
+        raise JustextDecodeError(e.encoding, e.object, e.start, e.end, e.reason)
+
+
 def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """Converts HTML to DOM."""
     if isinstance(html, unicode):
@@ -84,7 +95,7 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
         return html
 
     if encoding:
-        return html.decode(encoding, errors)
+        return _decode(html, encoding, errors)
 
     # byte order mark wins over the declared encoding
     # https://encoding.spec.whatwg.org/#bom-sniff

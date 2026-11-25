@@ -16,6 +16,23 @@ class TestHtmlEncoding(unittest.TestCase):
         assert type(s1) == type(s2)
         assert s1 == s2
 
+    def assert_strict_decode_error(self, html, codec, **kwargs):
+        """The error is both a JustextError and the UnicodeDecodeError of the codec."""
+        with pytest.raises(UnicodeDecodeError) as expected:
+            html.decode(codec)
+
+        try:
+            decode_html(html, errors='strict', **kwargs)
+        except JustextError as e:
+            error = e
+        else:
+            self.fail("JustextError not raised")
+
+        assert isinstance(error, UnicodeDecodeError)
+        for attr in ("encoding", "object", "start", "end", "reason"):
+            assert getattr(error, attr) == getattr(expected.value, attr)
+        assert str(error) == str(expected.value)
+
     def test_unicode(self):
         html = "ľščťžýáíéäňúô Ł€"
         decoded_html = decode_html(html)
@@ -121,6 +138,9 @@ class TestHtmlEncoding(unittest.TestCase):
         decoded_html = decode_html(html.encode("iso-8859-2"), encoding="iso-8859-2")
 
         self.assert_strings_equal(html, decoded_html)
+
+    def test_given_encoding_in_strict_mode(self):
+        self.assert_strict_decode_error(b"\xff", "utf-8", encoding="utf-8")
 
     def test_given_wrong_encoding(self):
         html = 'ľščťžäňôě'
