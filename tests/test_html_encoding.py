@@ -154,6 +154,9 @@ class TestHtmlEncoding(unittest.TestCase):
         with pytest.raises(JustextError):
             decode_html(html.encode("iso-8859-2"), errors='strict')
 
+    def test_meta_encoding_in_strict_mode(self):
+        self.assert_strict_decode_error(b'<meta charset="utf-8"/> \xff', "utf-8")
+
     def test_utf8_bom_is_not_part_of_the_text(self):
         html = '<p>ľščťžýáíéäňúô Ł€</p>'
         decoded_html = decode_html(codecs.BOM_UTF8 + html.encode("utf8"))
