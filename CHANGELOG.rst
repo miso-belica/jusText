@@ -9,6 +9,7 @@ Unreleased ()
 - *BUG FIX:* Respect UTF-8 and UTF-16 byte order marks when decoding HTML `#55 <https://github.com/miso-belica/jusText/pull/55>`_.
 - *BUG FIX:* BOM characters (U+FEFF, U+FFFE) inside the text are treated as white-space.
 - *BUG FIX:* Respect UTF-32 byte order marks when decoding HTML `#63 <https://github.com/miso-belica/jusText/pull/63>`_. A UTF-16 LE document whose first character after the BOM is U+0000 starts with the same bytes, so it is now decoded as UTF-32.
+- *BUG FIX:* ``decode_html()`` with ``errors="strict"`` raises ``JustextDecodeError`` (both ``JustextError`` and ``UnicodeDecodeError``) in every branch, not only in the fallback `#56 <https://github.com/miso-belica/jusText/issues/56>`_.
 
 3.0.2 (2025-02-25)
 ------------------
