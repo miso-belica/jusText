@@ -7,7 +7,7 @@ import codecs
 import unittest
 import pytest
 
-from justext.core import JustextError, decode_html, html_to_dom
+from justext.core import ENCODING_LABEL_ALIASES, JustextError, decode_html, html_to_dom
 
 
 class TestHtmlEncoding(unittest.TestCase):
@@ -168,3 +168,32 @@ class TestHtmlEncoding(unittest.TestCase):
         dom = html_to_dom(codecs.BOM_UTF16_LE + html.encode("utf-16-le"))
 
         self.assert_strings_equal("ľščťž", dom.text_content())
+
+
+@pytest.mark.parametrize(("label", "browser_encoding", "text"), [
+    ("iso-8859-1", "cp1252", "“hi” €"),
+    ("ISO-8859-1", "cp1252", "“hi” €"),
+    ("gb2312", "gb18030", "镕 𠀀"),
+    ("shift_jis", "cp932", "①"),
+    ("euc-kr", "cp949", "똠"),
+    ("utf-16", "utf-8", "ľščťž"),
+    ("windows-874", "cp874", "ไทย €"),
+    ("iso-8859-8-i", "iso8859-8", "שלום"),
+])
+def test_meta_charset_label_is_decoded_like_browsers(label, browser_encoding, text):
+    html = '<meta charset="%s"><p>%s</p>' % (label, text)
+    decoded_html = decode_html(html.encode(browser_encoding))
+
+    assert decoded_html == html
+
+
+def test_bytes_undefined_in_cp1252_are_decoded_like_browsers():
+    html = b'<meta charset="iso-8859-1"><p>\x81\x8d\x8f\x90\x9d \x80</p>'
+    decoded_html = decode_html(html, errors="strict")
+
+    assert decoded_html == '<meta charset="iso-8859-1"><p>\x81\x8d\x8f\x90\x9d €</p>'
+
+
+@pytest.mark.parametrize("codec", sorted(set(ENCODING_LABEL_ALIASES.values())))
+def test_encoding_label_aliases_point_to_existing_codecs(codec):
+    assert codecs.lookup(codec)
