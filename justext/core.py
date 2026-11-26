@@ -44,6 +44,21 @@ PARAGRAPH_TAGS = frozenset({
 DEFAULT_ENCODING = 'utf8'
 DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""", re.IGNORECASE)
+# <meta charset> labels that browsers decode with another codec than Python does
+# https://encoding.spec.whatwg.org/#names-and-labels
+ENCODING_LABEL_ALIASES = dict((label, codec) for codec, labels in (
+    ("cp1252", "ansi_x3.4-1968 ascii cp819 csisolatin1 ibm819 iso-8859-1 iso-ir-100 iso8859-1 iso88591 "
+               "iso_8859-1 iso_8859-1:1987 l1 latin1 us-ascii x-cp1252"),
+    ("gb18030", "chinese csgb2312 csiso58gb231280 gb2312 gb_2312 gb_2312-80 gbk iso-ir-58 x-gbk"),
+    # close to browsers, not identical: a few code points differ (0x8160 is U+FF5E, not U+301C)
+    ("cp932", "csshiftjis ms932 ms_kanji shift-jis shift_jis sjis windows-31j x-sjis"),
+    ("cp949", "cseuckr csksc56011987 euc-kr iso-ir-149 korean ks_c_5601-1987 ks_c_5601-1989 ksc5601 "
+              "ksc_5601 windows-949"),
+    # an ASCII-compatible <meta> can't be in UTF-16, browsers use UTF-8 then
+    ("utf-8", "utf-16 utf-16le utf-16be"),
+    ("cp874", "dos-874 iso-8859-11 iso8859-11 iso885911 tis-620 windows-874"),
+    ("iso8859-8", "csiso88598i iso-8859-8-i logical"),
+) for label in labels.split())
 GOOD_OR_BAD = {'good', 'bad'}
 
 
@@ -75,6 +90,17 @@ def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     return dom
 
 
+def _decode_as_c1_controls(error):
+    """
+    Decodes the bytes undefined in cp1252 (0x81, 0x8D, 0x8F, 0x90, 0x9D)
+    to the C1 control characters of the same value, as browsers do.
+    """
+    return error.object[error.start:error.end].decode("latin-1"), error.end
+
+
+codecs.register_error("justext.c1_controls", _decode_as_c1_controls)
+
+
 def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """
     Converts a `html` containing an HTML page into Unicode.
@@ -96,8 +122,12 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     match = CHARSET_META_TAG_PATTERN.search(html)
     if match:
         declared_encoding = match.group(1).decode("ASCII")
+        declared_encoding = ENCODING_LABEL_ALIASES.get(declared_encoding.lower(), declared_encoding)
         # proceed unknown encoding as if it wasn't found at all
         with ignored(LookupError):
+            if codecs.lookup(declared_encoding).name == "cp1252":
+                # like browsers, so it never fails, the same as latin-1 for "iso-8859-1" did
+                return html.decode("cp1252", "justext.c1_controls")
             return html.decode(declared_encoding, errors)
 
     # unknown encoding
