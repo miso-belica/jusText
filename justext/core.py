@@ -90,6 +90,10 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     # https://encoding.spec.whatwg.org/#bom-sniff
     if html.startswith(codecs.BOM_UTF8):
         return html.decode("utf-8-sig", errors)
+    # WHATWG leaves UTF-32 out, but its BOMs are checked here too. The LE
+    # one starts with the UTF-16 LE BOM, so it has to come first.
+    if html.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
+        return html.decode("utf-32", errors)
     if html.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
         return html.decode("utf-16", errors)
 

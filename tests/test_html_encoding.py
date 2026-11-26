@@ -158,6 +158,27 @@ class TestHtmlEncoding(unittest.TestCase):
 
         self.assert_strings_equal(html, decoded_html)
 
+    def test_utf32_bom_le(self):
+        html = '<p>ľščťžýáíéäňúô Ł€</p>'
+        decoded_html = decode_html(codecs.BOM_UTF32_LE + html.encode("utf-32-le"))
+
+        self.assert_strings_equal(html, decoded_html)
+
+    def test_utf32_bom_be(self):
+        html = '<p>ľščťžýáíéäňúô Ł€</p>'
+        decoded_html = decode_html(codecs.BOM_UTF32_BE + html.encode("utf-32-be"))
+
+        self.assert_strings_equal(html, decoded_html)
+
+    def test_utf16_le_starting_with_nul_is_read_as_utf32(self):
+        # BOM + U+0000 in UTF-16 LE has the same first 4 bytes as the
+        # UTF-32 LE BOM, so it is decoded as UTF-32. That is the trade-off
+        # for supporting UTF-32 at all.
+        html_bytes = codecs.BOM_UTF16_LE + '\x00<p>abc</p>'.encode("utf-16-le")
+        decoded_html = decode_html(html_bytes)
+
+        self.assert_strings_equal(html_bytes.decode("utf-32", "replace"), decoded_html)
+
     def test_given_encoding_wins_over_bom(self):
         decoded_html = decode_html(codecs.BOM_UTF8 + b"abc", encoding="iso-8859-1")
 
