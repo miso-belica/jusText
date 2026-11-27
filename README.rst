@@ -94,7 +94,7 @@ Run tests via
 
 .. code-block:: bash
 
-  $ py.test-2.7 && py.test-3.5 && py.test-3.6 && py.test-3.7 && py.test-3.8 && py.test-3.9
+  $ py.test tests
 
 
 Acknowledgements
