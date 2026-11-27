@@ -55,6 +55,10 @@ class JustextInvalidOptions(JustextError):
     pass
 
 
+class JustextDecodeError(JustextError, UnicodeDecodeError):
+    "Raised when the HTML can't be decoded to Unicode with `errors='strict'`."
+
+
 def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """Converts HTML to DOM."""
     if isinstance(html, unicode):
@@ -75,6 +79,13 @@ def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
     return dom
 
 
+def _decode(data, encoding, errors):
+    try:
+        return data.decode(encoding, errors)
+    except UnicodeDecodeError as e:
+        raise JustextDecodeError(e.encoding, e.object, e.start, e.end, e.reason)
+
+
 def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """
     Converts a `html` containing an HTML page into Unicode.
@@ -84,21 +95,21 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
         return html
 
     if encoding:
-        return html.decode(encoding, errors)
+        return _decode(html, encoding, errors)
 
     # byte order mark wins over the declared encoding
     # https://encoding.spec.whatwg.org/#bom-sniff
     if html.startswith(codecs.BOM_UTF8):
-        return html.decode("utf-8-sig", errors)
+        return _decode(html, "utf-8-sig", errors)
     if html.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
-        return html.decode("utf-16", errors)
+        return _decode(html, "utf-16", errors)
 
     match = CHARSET_META_TAG_PATTERN.search(html)
     if match:
         declared_encoding = match.group(1).decode("ASCII")
         # proceed unknown encoding as if it wasn't found at all
         with ignored(LookupError):
-            return html.decode(declared_encoding, errors)
+            return _decode(html, declared_encoding, errors)
 
     # unknown encoding
     try:
@@ -106,10 +117,7 @@ def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
         return html.decode("utf8")
     except UnicodeDecodeError:
         # try lucky with default encoding
-        try:
-            return html.decode(default_encoding, errors)
-        except UnicodeDecodeError as e:
-            raise JustextError("Unable to decode the HTML to Unicode: " + unicode(e))
+        return _decode(html, default_encoding, errors)
 
 
 def preprocessor(dom):

@@ -16,6 +16,20 @@ class TestHtmlEncoding(unittest.TestCase):
         assert type(s1) == type(s2)
         assert s1 == s2
 
+    def assert_strict_decode_error(self, html, codec, **kwargs):
+        """The error is both a JustextError and the UnicodeDecodeError of the codec."""
+        with pytest.raises(UnicodeDecodeError) as expected:
+            html.decode(codec)
+
+        with pytest.raises(JustextError) as raised:
+            decode_html(html, errors='strict', **kwargs)
+
+        error = raised.value
+        assert isinstance(error, UnicodeDecodeError)
+        for attr in ("encoding", "object", "start", "end", "reason"):
+            assert getattr(error, attr) == getattr(expected.value, attr)
+        assert str(error) == str(expected.value)
+
     def test_unicode(self):
         html = "ľščťžýáíéäňúô Ł€"
         decoded_html = decode_html(html)
@@ -105,6 +119,9 @@ class TestHtmlEncoding(unittest.TestCase):
         with pytest.raises(JustextError):
             decode_html(html.encode("iso-8859-2"), errors='strict')
 
+    def test_unknown_encoding_in_strict_mode_is_decode_error(self):
+        self.assert_strict_decode_error(b"\xff", "ascii", default_encoding="ascii")
+
     def test_unknown_encoding_with_default_error_handler(self):
         html = 'ľščťžäňôě'
         decoded = decode_html(html.encode("iso-8859-2"), default_encoding="iso-8859-2")
@@ -122,6 +139,9 @@ class TestHtmlEncoding(unittest.TestCase):
 
         self.assert_strings_equal(html, decoded_html)
 
+    def test_given_encoding_in_strict_mode(self):
+        self.assert_strict_decode_error(b"\xff", "utf-8", encoding="utf-8")
+
     def test_given_wrong_encoding(self):
         html = 'ľščťžäňôě'
         decoded_html = decode_html(html.encode("iso-8859-2"), encoding="ASCII")
@@ -133,6 +153,9 @@ class TestHtmlEncoding(unittest.TestCase):
 
         with pytest.raises(JustextError):
             decode_html(html.encode("iso-8859-2"), errors='strict')
+
+    def test_meta_encoding_in_strict_mode(self):
+        self.assert_strict_decode_error(b'<meta charset="utf-8"/> \xff', "utf-8")
 
     def test_utf8_bom_is_not_part_of_the_text(self):
         html = '<p>ľščťžýáíéäňúô Ł€</p>'
@@ -146,11 +169,19 @@ class TestHtmlEncoding(unittest.TestCase):
 
         self.assert_strings_equal(html, decoded_html)
 
+    def test_utf8_bom_in_strict_mode(self):
+        self.assert_strict_decode_error(codecs.BOM_UTF8 + b"\xff", "utf-8-sig")
+
     def test_utf16_bom_le(self):
         html = '<p>ľščťžýáíéäňúô Ł€</p>'
         decoded_html = decode_html(codecs.BOM_UTF16_LE + html.encode("utf-16-le"))
 
         self.assert_strings_equal(html, decoded_html)
+
+    def test_utf16_bom_in_strict_mode(self):
+        # a lone high surrogate followed by a plain character
+        html = codecs.BOM_UTF16_LE + b"\x00\xd8" + "a".encode("utf-16-le")
+        self.assert_strict_decode_error(html, "utf-16")
 
     def test_utf16_bom_be(self):
         html = '<p>ľščťžýáíéäňúô Ł€</p>'
