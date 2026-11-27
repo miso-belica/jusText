@@ -59,13 +59,6 @@ class JustextDecodeError(JustextError, UnicodeDecodeError):
     "Raised when the HTML can't be decoded to Unicode with `errors='strict'`."
 
 
-def _decode(data, encoding, errors):
-    try:
-        return data.decode(encoding, errors)
-    except UnicodeDecodeError as e:
-        raise JustextDecodeError(e.encoding, e.object, e.start, e.end, e.reason)
-
-
 def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):
     """Converts HTML to DOM."""
     if isinstance(html, unicode):
@@ -84,6 +77,13 @@ def html_to_dom(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=D
         dom = lxml.html.fromstring(html, parser=lxml.html.HTMLParser())
 
     return dom
+
+
+def _decode(data, encoding, errors):
+    try:
+        return data.decode(encoding, errors)
+    except UnicodeDecodeError as e:
+        raise JustextDecodeError(e.encoding, e.object, e.start, e.end, e.reason)
 
 
 def decode_html(html, default_encoding=DEFAULT_ENCODING, encoding=None, errors=DEFAULT_ENC_ERRORS):

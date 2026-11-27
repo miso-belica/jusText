@@ -21,13 +21,10 @@ class TestHtmlEncoding(unittest.TestCase):
         with pytest.raises(UnicodeDecodeError) as expected:
             html.decode(codec)
 
-        try:
+        with pytest.raises(JustextError) as raised:
             decode_html(html, errors='strict', **kwargs)
-        except JustextError as e:
-            error = e
-        else:
-            self.fail("JustextError not raised")
 
+        error = raised.value
         assert isinstance(error, UnicodeDecodeError)
         for attr in ("encoding", "object", "start", "end", "reason"):
             assert getattr(error, attr) == getattr(expected.value, attr)
